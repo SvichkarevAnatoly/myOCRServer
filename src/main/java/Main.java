@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
-        final String requestedFile = "/mirror";
+        final String requestedFile = "/findAll";
         final RequestServlet requestServlet = new RequestServlet();
         context.addServlet(new ServletHolder(requestServlet), requestedFile);
 
