@@ -31,6 +31,7 @@ public class RequestServlet extends HttpServlet {
         final List<String> dbProducts = db.getAllProducts();
         final DataBaseFinder finder = new DataBaseFinder(dbProducts);
         final List<String> matches = finder.findAll(findAllRequest.products);
+        System.out.println(Arrays.toString(matches.toArray()));
 
         final FindAllResponse findAllResponse = new FindAllResponse(matches);
         final String json = gson.toJson(findAllResponse);
