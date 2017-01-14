@@ -1,5 +1,7 @@
 package servlet;
 
+import com.google.gson.Gson;
+import connection.OcrResponse;
 import model.ocr.Tesseract;
 import org.bytedeco.javacpp.lept;
 
@@ -13,7 +15,7 @@ import java.io.InputStream;
 
 public class ImageServlet extends HttpServlet {
 
-    private static final String IMAGE_KEY = "image";
+    private static final String IMAGE_KEY = "imageUri";
 
     @Override
     protected void doPost(HttpServletRequest request,
@@ -23,18 +25,25 @@ public class ImageServlet extends HttpServlet {
 
         final Tesseract tesseract = new Tesseract("rus");
 
-        final String ocr = tesseract.ocr(pix);
-        System.out.println(ocr);
+        final String ocrText = tesseract.ocr(pix);
+        System.out.println(ocrText);
+
+        final OcrResponse ocrResponse = new OcrResponse(ocrText);
+
+        Gson gson = new Gson();
+        final String json = gson.toJson(ocrResponse);
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
+
+        response.getWriter().write(json);
     }
 
     private lept.PIX readPixFromPart(Part part) {
-        final int size = (int) part.getSize();
         final InputStream inputStream;
         try {
             inputStream = part.getInputStream();
+            final int size = (int) part.getSize();
             byte[] bytes = new byte[size];
             inputStream.read(bytes, 0, size);
             return lept.pixReadMem(bytes, size);
