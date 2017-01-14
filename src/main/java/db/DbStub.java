@@ -1,7 +1,7 @@
 package db;
 
 
-import model.OcrParser;
+import model.text.OcrParser;
 
 import java.io.*;
 import java.util.List;
