@@ -3,7 +3,6 @@ package model.text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class OcrParser {
@@ -40,12 +39,6 @@ public class OcrParser {
     }
 
     private void deleteEmptyStrings(List<String> strings) {
-        final Iterator<String> it = strings.iterator();
-        while (it.hasNext()) {
-            final String next = it.next();
-            if (next.trim().isEmpty()) {
-                it.remove();
-            }
-        }
+        strings.removeIf(next -> next.trim().isEmpty());
     }
 }
