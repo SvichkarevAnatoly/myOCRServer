@@ -7,12 +7,12 @@ import java.io.*;
 import java.util.List;
 
 public class DbStub {
-    String path = "/home/anatoly/Documents/self/fan/OCR/myOCRServer/resource/";
-
     public List<String> getAllProducts() {
         String dbProductsText = "";
         try {
-            dbProductsText = readText("south.txt");
+            final String dbFileName = "south.txt";
+            final String dbFilePath = getClass().getResource(dbFileName).getFile();
+            dbProductsText = readText(dbFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -20,8 +20,8 @@ public class DbStub {
         return parser.parseProductList();
     }
 
-    private String readText(String fileName) throws IOException {
-        final InputStream openInputStream = new FileInputStream(path + fileName);
+    private String readText(String filePath) throws IOException {
+        final InputStream openInputStream = new FileInputStream(filePath);
         BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream));
 
         String line;
