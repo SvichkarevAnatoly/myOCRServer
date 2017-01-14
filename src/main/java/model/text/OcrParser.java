@@ -1,4 +1,4 @@
-package model;
+package model.text;
 
 
 import java.util.ArrayList;
@@ -11,7 +11,12 @@ public class OcrParser {
     private String pricesText;
 
     public OcrParser(String productsText) {
+        this(productsText, "");
+    }
+
+    public OcrParser(String productsText, String pricesText) {
         this.productsText = productsText;
+        this.pricesText = pricesText;
     }
 
     public void setPricesText(String pricesText) {
