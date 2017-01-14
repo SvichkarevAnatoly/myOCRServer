@@ -7,11 +7,13 @@ import java.io.*;
 import java.util.List;
 
 public class DbStub {
+    private static final String DB_FILE_NAME = "south.txt";
+
     public List<String> getAllProducts() {
         String dbProductsText = "";
         try {
-            final String dbFileName = "south.txt";
-            final String dbFilePath = getClass().getResource(dbFileName).getFile();
+            final ClassLoader classLoader = getClass().getClassLoader();
+            final String dbFilePath = classLoader.getResource(DB_FILE_NAME).getFile();
             dbProductsText = readText(dbFilePath);
         } catch (IOException e) {
             e.printStackTrace();
