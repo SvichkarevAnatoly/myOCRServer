@@ -13,6 +13,8 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.bytedeco.javacpp.lept.IFF_PNG;
+
 public class ImageServlet extends HttpServlet {
 
     private static final String IMAGE_KEY = "imageUri";
@@ -23,9 +25,12 @@ public class ImageServlet extends HttpServlet {
         final Part part = request.getPart(IMAGE_KEY);
         final lept.PIX pix = readPixFromPart(part);
 
+        lept.pixWrite("out.png", pix, IFF_PNG);
+
         final Tesseract tesseract = new Tesseract("rus");
 
         final String ocrText = tesseract.ocr(pix);
+        pix.deallocate();
         System.out.println(ocrText);
 
         final OcrResponse ocrResponse = new OcrResponse(ocrText);
