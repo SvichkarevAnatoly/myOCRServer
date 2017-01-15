@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 
 import static org.bytedeco.javacpp.lept.IFF_PNG;
 
@@ -25,9 +26,14 @@ public class ImageServlet extends HttpServlet {
         final Part part = request.getPart(IMAGE_KEY);
         final lept.PIX pix = readPixFromPart(part);
 
-        lept.pixWrite("out.png", pix, IFF_PNG);
+        lept.pixWrite(String.format("receivedImages/out%s.png", Calendar.getInstance().getTime().toString()), pix, IFF_PNG);
 
         final Tesseract tesseract = new Tesseract("rus");
+        /*final String russianAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
+                "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
+                "0123456789" +
+                "/.%\"";*/
+        // tesseract.setCharWhitelist(russianAlphabet);
 
         final String ocrText = tesseract.ocr(pix);
         pix.deallocate();
