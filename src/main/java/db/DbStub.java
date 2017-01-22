@@ -3,18 +3,22 @@ package db;
 
 import model.text.OcrParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class DbStub {
-    private static final String DB_FILE_NAME = "south.txt";
+    private static final String DB_FILE_NAME = "/south.txt";
 
     public List<String> getAllProducts() {
         String dbProductsText = "";
         try {
-            final ClassLoader classLoader = getClass().getClassLoader();
-            final String dbFilePath = classLoader.getResource(DB_FILE_NAME).getFile();
-            dbProductsText = readText(dbFilePath);
+            InputStream inputStream = getClass().getResourceAsStream(DB_FILE_NAME);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            dbProductsText = readText(bufferedReader);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -22,10 +26,7 @@ public class DbStub {
         return parser.parseProductList();
     }
 
-    private String readText(String filePath) throws IOException {
-        final InputStream openInputStream = new FileInputStream(filePath);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream));
-
+    private String readText(BufferedReader reader) throws IOException {
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         String ls = System.getProperty("line.separator");
@@ -33,7 +34,6 @@ public class DbStub {
             stringBuilder.append(line);
             stringBuilder.append(ls);
         }
-        openInputStream.close();
         reader.close();
         return stringBuilder.toString();
     }
