@@ -58,6 +58,11 @@ public class DbService {
         configuration.setProperty("hibernate.connection.password", hibernate_password);
         configuration.setProperty("hibernate.show_sql", hibernate_show_sql);
         configuration.setProperty("hibernate.hbm2ddl.auto", hibernate_hbm2ddl_auto);
+        // for utf-8
+        configuration.setProperty("hibernate.connection.CharSet", "utf8");
+        configuration.setProperty("hibernate.connection.characterEncoding", "utf8");
+        configuration.setProperty("hibernate.connection.useUnicode", "true");
+
         return configuration;
     }
 }
