@@ -1,3 +1,4 @@
+import db.DbService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -8,6 +9,8 @@ import javax.servlet.MultipartConfigElement;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        final DbService dbService = new DbService();
+
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         final String requestedUrl = "/findAll";
