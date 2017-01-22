@@ -4,7 +4,7 @@ import align.DataBaseFinder;
 import com.google.gson.Gson;
 import connection.FindAllRequest;
 import connection.FindAllResponse;
-import db.DbStub;
+import db.DbService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +16,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FindAllServlet extends HttpServlet {
+    private final DbService dbService;
+
+    public FindAllServlet(DbService dbService) {
+        this.dbService = dbService;
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         FindAllRequest findAllRequest = new FindAllRequest();
@@ -27,9 +33,8 @@ public class FindAllServlet extends HttpServlet {
         }
         System.out.println(Arrays.toString(findAllRequest.products.toArray()));
 
-        final DbStub db = new DbStub();
-        final List<String> dbProducts = db.getAllProducts();
-        final DataBaseFinder finder = new DataBaseFinder(dbProducts);
+        final List<String> allProducts = dbService.getAllProducts();
+        final DataBaseFinder finder = new DataBaseFinder(allProducts);
         final List<String> matches = finder.findAll(findAllRequest.products);
         System.out.println(Arrays.toString(matches.toArray()));
 

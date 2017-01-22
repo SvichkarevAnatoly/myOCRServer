@@ -14,7 +14,7 @@ public class Main {
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         final String requestedUrl = "/findAll";
-        final FindAllServlet findAllServlet = new FindAllServlet();
+        final FindAllServlet findAllServlet = new FindAllServlet(dbService);
         context.addServlet(new ServletHolder(findAllServlet), requestedUrl);
 
         final String imageUrl = "/image";
