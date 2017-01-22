@@ -10,10 +10,11 @@ import org.hibernate.service.ServiceRegistry;
 import java.util.List;
 
 public class DbService {
+    private static final String amazon_url = "myocrdb.ckt8l133kbsa.us-west-2.rds.amazonaws.com";
     private static final String hibernate_show_sql = "true";
     private static final String hibernate_hbm2ddl_auto = "update";
     private static final String hibernate_username = "ocruser";
-    private static final String hibernate_password = "pass";
+    private static final String hibernate_password = "passpass";
 
     private final SessionFactory sessionFactory;
 
@@ -53,7 +54,7 @@ public class DbService {
 
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/ocr");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://" + amazon_url + "/ocr");
         configuration.setProperty("hibernate.connection.username", hibernate_username);
         configuration.setProperty("hibernate.connection.password", hibernate_password);
         configuration.setProperty("hibernate.show_sql", hibernate_show_sql);
