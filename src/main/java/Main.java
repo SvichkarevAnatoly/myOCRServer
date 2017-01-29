@@ -4,6 +4,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import servlet.FindServlet;
 import servlet.ImageServlet;
+import servlet.InsertServlet;
 import servlet.MirrorServlet;
 import util.TessdataUtil;
 
@@ -16,6 +17,7 @@ public class Main {
 
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
+        // For debugging
         final String mirrorUrl = "/mirror";
         final MirrorServlet mirrorServlet = new MirrorServlet();
         context.addServlet(new ServletHolder(mirrorServlet), mirrorUrl);
@@ -29,6 +31,10 @@ public class Main {
         final ServletHolder servletHolder = new ServletHolder(imageServlet);
         servletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement("data/tmp"));
         context.addServlet(servletHolder, imageUrl);
+
+        final String insertUrl = "/add";
+        final InsertServlet insertServlet = new InsertServlet(dbService);
+        context.addServlet(new ServletHolder(insertServlet), insertUrl);
 
         final Server server = new Server(8080);
         server.setHandler(context);

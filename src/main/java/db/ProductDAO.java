@@ -14,8 +14,8 @@ public class ProductDAO {
         this.session = session;
     }
 
-    public long insertProduct(ProductDataSet product) throws HibernateException {
-        return (Long) session.save(product);
+    public long insertProductDataSet(ProductDataSet productDataSet) throws HibernateException {
+        return (Long) session.save(productDataSet);
     }
 
     public List<String> getAllProductDataSets() throws HibernateException {

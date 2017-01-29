@@ -1,5 +1,7 @@
 package db;
 
+import com.google.gson.annotations.SerializedName;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,9 +15,11 @@ public class ProductDataSet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @SerializedName("name")
     @Column(name = "name", unique = false, updatable = false)
     private String name;
 
+    @SerializedName("price")
     @Column(name = "price", unique = false, updatable = false)
     private String price;
 

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class DbService {
     private static final String amazon_url = "myocrdb.ckt8l133kbsa.us-west-2.rds.amazonaws.com";
+    private static final String localhost_url = "localhost";
     private static final String hibernate_show_sql = "true";
     private static final String hibernate_hbm2ddl_auto = "update";
     private static final String hibernate_username = "ocruser";
@@ -30,14 +31,17 @@ public class DbService {
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
-    public long addNewProduct(ProductDataSet product) {
+    public long insertProductDataSet(List<ProductDataSet> productDataSetList) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         ProductDAO dao = new ProductDAO(session);
-        long id = dao.insertProduct(product);
+        long lastId = -1;
+        for (ProductDataSet productDataSet : productDataSetList) {
+            lastId = dao.insertProductDataSet(productDataSet);
+        }
         transaction.commit();
         session.close();
-        return id;
+        return lastId;
     }
 
     public List<String> getAllProducts() {
@@ -54,7 +58,7 @@ public class DbService {
 
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://" + amazon_url + "/ocr");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://" + localhost_url + "/ocr");
         configuration.setProperty("hibernate.connection.username", hibernate_username);
         configuration.setProperty("hibernate.connection.password", hibernate_password);
         configuration.setProperty("hibernate.show_sql", hibernate_show_sql);
