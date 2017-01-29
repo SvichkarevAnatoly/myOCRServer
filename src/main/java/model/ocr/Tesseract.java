@@ -10,8 +10,7 @@ public class Tesseract {
 
     public Tesseract(String lang) {
         api = new tesseract.TessBaseAPI();
-
-        final String tessdataFolder = getClass().getResource("/").getFile();
+        final String tessdataFolder = System.getProperty("user.dir");
         if (api.Init(tessdataFolder, lang) != 0) {
             System.err.println("Could not initialize tesseract.");
         }

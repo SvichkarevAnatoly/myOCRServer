@@ -4,11 +4,13 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import servlet.FindAllServlet;
 import servlet.ImageServlet;
+import util.TessdataUtil;
 
 import javax.servlet.MultipartConfigElement;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        TessdataUtil.extractTessdata();
         final DbService dbService = new DbService();
 
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
