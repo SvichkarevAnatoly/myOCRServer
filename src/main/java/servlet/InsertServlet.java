@@ -31,9 +31,10 @@ public class InsertServlet extends HttpServlet {
         }
         System.out.println(Arrays.toString(insertRequest.productDataSets.toArray()));
 
-        dbService.insertProductDataSet(insertRequest.productDataSets);
+        final long lastIndex = dbService.insertProductDataSet(insertRequest.productDataSets);
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().println("{\"lastIndex\":\"" + lastIndex + "\"}");
     }
 }
