@@ -61,7 +61,7 @@ public class DbService {
 
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://" + localhost_url + "/ocr");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://" + host_url + "/ocr");
         configuration.setProperty("hibernate.connection.username", hibernate_username);
         configuration.setProperty("hibernate.connection.password", hibernate_password);
         configuration.setProperty("hibernate.show_sql", hibernate_show_sql);
