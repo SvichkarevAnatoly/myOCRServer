@@ -4,6 +4,8 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.lept;
 import org.bytedeco.javacpp.tesseract;
 
+import java.nio.charset.StandardCharsets;
+
 public class Tesseract {
 
     private final tesseract.TessBaseAPI api;
@@ -27,8 +29,9 @@ public class Tesseract {
     public String ocr(lept.PIX image) {
         api.SetImage(image);
 
-        BytePointer outText = api.GetUTF8Text();
-        final String ocrText = outText.getString();
+        final BytePointer outText = api.GetUTF8Text();
+        final byte[] outTextStringBytes = outText.getStringBytes();
+        final String ocrText = new String(outTextStringBytes, StandardCharsets.UTF_8);
 
         outText.deallocate();
 
