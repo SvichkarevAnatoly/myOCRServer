@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class FindAllServlet extends HttpServlet {
+public class FindServlet extends HttpServlet {
     private final DbService dbService;
 
-    public FindAllServlet(DbService dbService) {
+    public FindServlet(DbService dbService) {
         this.dbService = dbService;
     }
 

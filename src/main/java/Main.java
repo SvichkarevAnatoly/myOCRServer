@@ -2,7 +2,7 @@ import db.DbService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import servlet.FindAllServlet;
+import servlet.FindServlet;
 import servlet.ImageServlet;
 import servlet.MirrorServlet;
 import util.TessdataUtil;
@@ -20,9 +20,9 @@ public class Main {
         final MirrorServlet mirrorServlet = new MirrorServlet();
         context.addServlet(new ServletHolder(mirrorServlet), mirrorUrl);
 
-        final String findAllUrl = "/findAll";
-        final FindAllServlet findAllServlet = new FindAllServlet(dbService);
-        context.addServlet(new ServletHolder(findAllServlet), findAllUrl);
+        final String findUrl = "/find";
+        final FindServlet findServlet = new FindServlet(dbService);
+        context.addServlet(new ServletHolder(findServlet), findUrl);
 
         final String imageUrl = "/image";
         final ImageServlet imageServlet = new ImageServlet();
