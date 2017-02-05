@@ -13,7 +13,7 @@ public class DbService {
     private static final String amazon_url = "myocrdb.ckt8l133kbsa.us-west-2.rds.amazonaws.com";
     private static final String localhost_url = "localhost";
 
-    private static final String host_url = amazon_url;
+    private static final String host_url = localhost_url;
 
     private static final String hibernate_show_sql = "true";
     private static final String hibernate_hbm2ddl_auto = "update";
@@ -55,6 +55,14 @@ public class DbService {
         return products;
     }
 
+    public List<Shop> getShopsByCity(long id) {
+        Session session = sessionFactory.openSession();
+        final ShopDAO dao = new ShopDAO(session);
+        final List<Shop> shops = dao.getByCity(id);
+        session.close();
+        return shops;
+    }
+
     private Configuration getMySqlConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(ProductDataSet.class);
@@ -70,6 +78,10 @@ public class DbService {
         configuration.setProperty("hibernate.connection.CharSet", "utf8");
         configuration.setProperty("hibernate.connection.characterEncoding", "utf8");
         configuration.setProperty("hibernate.connection.useUnicode", "true");
+
+        configuration.addAnnotatedClass(Shop.class);
+        configuration.addAnnotatedClass(City.class);
+        configuration.addAnnotatedClass(CityShop.class);
 
         return configuration;
     }
