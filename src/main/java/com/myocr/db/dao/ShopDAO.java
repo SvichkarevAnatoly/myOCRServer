@@ -1,6 +1,6 @@
-package com.myocr.db.DAO;
+package com.myocr.db.dao;
 
-import com.myocr.db.Shop;
+import com.myocr.model.pojo.Shop;
 import org.hibernate.Session;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.myocr.db;
+package com.myocr.model.pojo;
 
 import com.google.gson.annotations.SerializedName;
 

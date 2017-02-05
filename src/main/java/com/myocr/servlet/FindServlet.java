@@ -1,8 +1,8 @@
 package com.myocr.servlet;
 
 import com.google.gson.Gson;
-import com.myocr.align.DataBaseFinder;
 import com.myocr.db.DbService;
+import com.myocr.model.align.DataBaseFinder;
 import com.myocr.servlet.connection.FindAllRequest;
 import com.myocr.servlet.connection.FindAllResponse;
 

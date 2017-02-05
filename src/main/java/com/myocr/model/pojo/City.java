@@ -1,4 +1,4 @@
-package com.myocr.db;
+package com.myocr.model.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "products")
-public class ProductDataSet implements Serializable {
+@Table(name = "City")
+public class City implements Serializable {
     private static final long serialVersionUID = -8706689714326132798L;
 
     @Id
@@ -19,19 +19,15 @@ public class ProductDataSet implements Serializable {
     @Column(name = "name", unique = false, updatable = false)
     private String name;
 
-    @SerializedName("price")
-    @Column(name = "price", unique = false, updatable = false)
-    private String price;
 
     //Important to Hibernate!
     @SuppressWarnings("UnusedDeclaration")
-    public ProductDataSet() {
+    public City() {
     }
 
-    public ProductDataSet(String name, String price) {
+    public City(String name) {
         setId(-1);
-        setName(name);
-        setPrice(price);
+        this.name = name;
     }
 
     public long getId() {
@@ -48,22 +44,5 @@ public class ProductDataSet implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductDataSet{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price='" + price + '\'' +
-                '}';
     }
 }

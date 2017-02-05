@@ -1,4 +1,4 @@
-package com.myocr.db;
+package com.myocr.model.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;

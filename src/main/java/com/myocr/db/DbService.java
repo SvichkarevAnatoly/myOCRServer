@@ -1,7 +1,11 @@
 package com.myocr.db;
 
-import com.myocr.db.DAO.ProductDAO;
-import com.myocr.db.DAO.ShopDAO;
+import com.myocr.db.dao.ProductDAO;
+import com.myocr.db.dao.ShopDAO;
+import com.myocr.model.pojo.City;
+import com.myocr.model.pojo.CityShop;
+import com.myocr.model.pojo.ProductDataSet;
+import com.myocr.model.pojo.Shop;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

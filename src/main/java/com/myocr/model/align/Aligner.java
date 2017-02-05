@@ -1,4 +1,4 @@
-package com.myocr.align;
+package com.myocr.model.align;
 
 
 public interface Aligner {

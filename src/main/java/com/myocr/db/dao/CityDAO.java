@@ -1,6 +1,6 @@
-package com.myocr.db.DAO;
+package com.myocr.db.dao;
 
-import com.myocr.db.City;
+import com.myocr.model.pojo.City;
 import org.hibernate.Session;
 
 public class CityDAO extends BaseDAO<CityDAO> {

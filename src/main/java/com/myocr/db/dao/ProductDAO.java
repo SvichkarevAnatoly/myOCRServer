@@ -1,6 +1,6 @@
-package com.myocr.db.DAO;
+package com.myocr.db.dao;
 
-import com.myocr.db.ProductDataSet;
+import com.myocr.model.pojo.ProductDataSet;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

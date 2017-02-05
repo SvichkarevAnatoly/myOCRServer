@@ -1,4 +1,4 @@
-package com.myocr.model.text;
+package com.myocr.model.ocr;
 
 
 import java.util.ArrayList;

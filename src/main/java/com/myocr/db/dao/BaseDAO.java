@@ -1,4 +1,4 @@
-package com.myocr.db.DAO;
+package com.myocr.db.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
