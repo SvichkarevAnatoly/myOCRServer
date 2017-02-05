@@ -1,9 +1,9 @@
 package servlet;
 
 import com.google.gson.Gson;
-import connection.OcrResponse;
 import model.ocr.Tesseract;
 import org.bytedeco.javacpp.lept;
+import servlet.connection.OcrResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

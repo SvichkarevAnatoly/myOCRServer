@@ -2,9 +2,9 @@ package servlet;
 
 import align.DataBaseFinder;
 import com.google.gson.Gson;
-import connection.FindAllRequest;
-import connection.FindAllResponse;
 import db.DbService;
+import servlet.connection.FindAllRequest;
+import servlet.connection.FindAllResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

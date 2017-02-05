@@ -1,8 +1,8 @@
 package servlet;
 
 import com.google.gson.Gson;
-import connection.InsertRequest;
 import db.DbService;
+import servlet.connection.InsertRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
