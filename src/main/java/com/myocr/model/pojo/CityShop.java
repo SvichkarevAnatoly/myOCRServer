@@ -14,27 +14,13 @@ public class CityShop implements Serializable {
     private long id;
 
     @Column(name = "id_city")
-    private long idCity;
+    private long cityId;
 
     @Column(name = "id_shop")
-    private long idShop;
+    private long shopId;
 
     //Important to Hibernate!
     @SuppressWarnings("UnusedDeclaration")
     public CityShop() {
-    }
-
-    public CityShop(long idCity, long idShop) {
-        setId(-1);
-        this.idCity = idCity;
-        this.idShop = idShop;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

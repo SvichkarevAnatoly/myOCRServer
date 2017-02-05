@@ -1,7 +1,9 @@
 package com.myocr.db;
 
+import com.myocr.db.dao.CityShopDAO;
 import com.myocr.db.dao.ProductDAO;
 import com.myocr.db.dao.ShopDAO;
+import com.myocr.model.pojo.CityShop;
 import com.myocr.model.pojo.ProductDataSet;
 import com.myocr.model.pojo.Shop;
 import org.hibernate.Session;
@@ -44,5 +46,13 @@ public class DbService {
         final List<Shop> shops = dao.getByCity(id);
         session.close();
         return shops;
+    }
+
+    public CityShop getCityShop(long cityId, long shopId) {
+        Session session = sessionFactory.openSession();
+        final CityShopDAO dao = new CityShopDAO(session);
+        final CityShop cityShop = dao.getCityShop(cityId, shopId);
+        session.close();
+        return cityShop;
     }
 }
