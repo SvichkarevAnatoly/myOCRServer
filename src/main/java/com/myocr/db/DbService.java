@@ -1,8 +1,6 @@
 package com.myocr.db;
 
-import com.myocr.db.dao.CityShopDAO;
-import com.myocr.db.dao.ProductDAO;
-import com.myocr.db.dao.ShopDAO;
+import com.myocr.db.dao.*;
 import com.myocr.model.pojo.CityShop;
 import com.myocr.model.pojo.ProductDataSet;
 import com.myocr.model.pojo.Shop;
@@ -54,5 +52,19 @@ public class DbService {
         final CityShop cityShop = dao.getCityShop(cityId, shopId);
         session.close();
         return cityShop;
+    }
+
+    public List<String> getReceiptItems(long shopId) {
+        Session session = sessionFactory.openSession();
+        final CityShopDAO cityShopDAO = new CityShopDAO(session);
+        final List<Long> cityShopIds = cityShopDAO.getCityShop(shopId);
+
+        final PriceDAO priceDAO = new PriceDAO(session);
+        final List<Long> receiptItemIds = priceDAO.getReceiptItems(cityShopIds);
+
+        final ReceiptItemDAO receiptItemDAO = new ReceiptItemDAO(session);
+        final List<String> receiptItems = receiptItemDAO.getReceiptItems(receiptItemIds);
+        session.close();
+        return receiptItems;
     }
 }

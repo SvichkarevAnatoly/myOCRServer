@@ -2,7 +2,6 @@ package com.myocr;
 
 import com.myocr.db.DbConfiguration;
 import com.myocr.db.DbService;
-import com.myocr.model.pojo.CityShop;
 import com.myocr.servlet.FindServlet;
 import com.myocr.servlet.ImageServlet;
 import com.myocr.servlet.InsertServlet;
@@ -18,8 +17,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         TessdataUtil.extractTessdata();
         final DbService dbService = new DbService(new DbConfiguration().getSessionFactory());
-
-        final CityShop cityShop = dbService.getCityShop(1, 3);
 
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 

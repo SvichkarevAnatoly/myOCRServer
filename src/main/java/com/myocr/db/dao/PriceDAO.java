@@ -1,8 +1,10 @@
 package com.myocr.db.dao;
 
 import com.myocr.model.pojo.Price;
-import com.myocr.model.pojo.Shop;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -17,12 +19,11 @@ public class PriceDAO extends BaseDAO<PriceDAO> {
         return Price.class;
     }
 
-    public List<Shop> getByCity(long cityId) {
-        final List shops = session.createQuery("FROM Shop s " +
-                "WHERE s.id IN (SELECT idShop " +
-                "FROM CityShop cs " +
-                "WHERE idCity = :cityId)")
-                .setParameter("cityId", cityId).list();
-        return (List<Shop>) shops;
+    public List<Long> getReceiptItems(List<Long> cityShopIds) {
+        Criteria criteria = session.createCriteria(getModelClass());
+        criteria.add(Restrictions.in("idCityShop", cityShopIds));
+        criteria.setProjection(Projections.property("idReceiptItem"));
+
+        return (List<Long>) criteria.list();
     }
 }

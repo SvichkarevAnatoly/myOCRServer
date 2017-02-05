@@ -1,9 +1,6 @@
 package com.myocr.db;
 
-import com.myocr.model.pojo.City;
-import com.myocr.model.pojo.CityShop;
-import com.myocr.model.pojo.ProductDataSet;
-import com.myocr.model.pojo.Shop;
+import com.myocr.model.pojo.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -57,6 +54,8 @@ public class DbConfiguration {
         configuration.addAnnotatedClass(Shop.class);
         configuration.addAnnotatedClass(City.class);
         configuration.addAnnotatedClass(CityShop.class);
+        configuration.addAnnotatedClass(Price.class);
+        configuration.addAnnotatedClass(ReceiptItem.class);
 
         return configuration;
     }
