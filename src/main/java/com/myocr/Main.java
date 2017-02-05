@@ -1,7 +1,7 @@
 package com.myocr;
 
-import com.myocr.db.DbConfiguration;
 import com.myocr.db.DbService;
+import com.myocr.db.HibernateUtil;
 import com.myocr.servlet.FindServlet;
 import com.myocr.servlet.ImageServlet;
 import com.myocr.servlet.InsertServlet;
@@ -16,7 +16,7 @@ import javax.servlet.MultipartConfigElement;
 public class Main {
     public static void main(String[] args) throws Exception {
         TessdataUtil.extractTessdata();
-        final DbService dbService = new DbService(new DbConfiguration().getSessionFactory());
+        final DbService dbService = new DbService(HibernateUtil.getSessionFactory());
 
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
@@ -45,5 +45,7 @@ public class Main {
         server.start();
         System.out.println("Server started");
         server.join();
+
+        HibernateUtil.shutdown();
     }
 }
