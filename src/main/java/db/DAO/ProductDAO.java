@@ -1,5 +1,6 @@
-package db;
+package db.DAO;
 
+import db.ProductDataSet;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

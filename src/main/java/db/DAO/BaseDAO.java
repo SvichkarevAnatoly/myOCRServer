@@ -1,4 +1,4 @@
-package db;
+package db.DAO;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;

@@ -1,5 +1,7 @@
 package db;
 
+import db.DAO.ProductDAO;
+import db.DAO.ShopDAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

@@ -1,5 +1,4 @@
 import db.DbService;
-import db.Shop;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -10,14 +9,11 @@ import servlet.MirrorServlet;
 import util.TessdataUtil;
 
 import javax.servlet.MultipartConfigElement;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         TessdataUtil.extractTessdata();
         final DbService dbService = new DbService();
-
-        final List<Shop> shopsByCity = dbService.getShopsByCity(1);
 
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 

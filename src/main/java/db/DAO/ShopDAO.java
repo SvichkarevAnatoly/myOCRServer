@@ -1,5 +1,6 @@
-package db;
+package db.DAO;
 
+import db.Shop;
 import org.hibernate.Session;
 
 import java.util.List;

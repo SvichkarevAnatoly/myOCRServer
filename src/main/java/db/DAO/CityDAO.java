@@ -1,5 +1,6 @@
-package db;
+package db.DAO;
 
+import db.City;
 import org.hibernate.Session;
 
 public class CityDAO extends BaseDAO<CityDAO> {
