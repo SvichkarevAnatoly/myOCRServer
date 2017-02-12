@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Shop {
@@ -21,11 +21,10 @@ public class Shop {
     @JoinTable(name = "shop_city",
             joinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false))
-    private Set<City> cities;
+    private List<City> cities = new ArrayList<>();
 
     public Shop(String name) {
         this.name = name;
-        cities = new HashSet<>();
     }
 
     Shop() {

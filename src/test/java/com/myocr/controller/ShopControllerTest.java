@@ -21,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class ShopControllerTest {
 
     @Test
     public void findShops() throws Exception {
-        final List<Shop> shops = new ArrayList<>(spb.getShops());
+        final List<Shop> shops = spb.getShops();
         mockMvc.perform(get("/shops/inCity/" + cityNames.get(0)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))

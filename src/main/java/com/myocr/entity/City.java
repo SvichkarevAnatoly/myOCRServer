@@ -5,8 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class City {
@@ -15,11 +15,10 @@ public class City {
     private long id;
     private String name;
     @ManyToMany(mappedBy = "cities")
-    private Set<Shop> shops = new HashSet<>();
+    private List<Shop> shops = new ArrayList<>();
 
     public City(String name) {
         this.name = name;
-        shops = new HashSet<>();
     }
 
     City() {
@@ -45,12 +44,8 @@ public class City {
         return shops.contains(shop);
     }
 
-    public Set<Shop> getShops() {
+    public List<Shop> getShops() {
         return shops;
-    }
-
-    public void setShops(Set<Shop> shops) {
-        this.shops = shops;
     }
 
     @Override
