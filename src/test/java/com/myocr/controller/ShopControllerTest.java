@@ -1,11 +1,9 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
-import com.myocr.entity.City;
 import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.ShopRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -69,7 +66,7 @@ public class ShopControllerTest {
                 this.mappingJackson2HttpMessageConverter);
     }
 
-    @Before
+    /*@Before
     public void setup() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
 
@@ -79,7 +76,7 @@ public class ShopControllerTest {
         final City moscow = cityRepository.save(new City(cityName));
         shops.add(shopRepository.save(new Shop("Aushan", moscow)));
         shops.add(shopRepository.save(new Shop("Prisma", moscow)));
-    }
+    }*/
 
     @Test
     public void readShops() throws Exception {
