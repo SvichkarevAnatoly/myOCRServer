@@ -1,7 +1,9 @@
 package com.myocr;
 
 import com.myocr.entity.City;
+import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
+import com.myocr.repository.ShopRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,9 +19,15 @@ public class Application {
     }
 
     @Bean
-    CommandLineRunner init(CityRepository cityRepository) {
+    CommandLineRunner init(CityRepository cityRepository, ShopRepository shopRepository) {
         return (evt) -> Arrays.asList(
                 "Saint-Petersburg,Moscow,Novosibirsk".split(","))
-                .forEach(name -> cityRepository.save(new City(name)));
+                .forEach(cityName -> {
+                            final City city = cityRepository.save(new City(cityName));
+
+                            shopRepository.save(new Shop("Ashan", city));
+                            shopRepository.save(new Shop("Prizma", city));
+                        }
+                );
     }
 }
