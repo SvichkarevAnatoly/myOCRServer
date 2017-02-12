@@ -1,9 +1,11 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
+import com.myocr.entity.City;
 import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.ShopRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -43,8 +46,10 @@ public class ShopControllerTest {
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
-    private String cityName = "Moscow";
-    private List<Shop> shops = new ArrayList<>();
+    private List<String> cityNames = Arrays.asList("Spb", "Nsk");
+    private List<String> shopNames = Arrays.asList("Auchan", "Prisma", "Karusel", "Megas");
+
+    private City spb;
 
     @Autowired
     private CityRepository cityRepository;
@@ -66,28 +71,40 @@ public class ShopControllerTest {
                 this.mappingJackson2HttpMessageConverter);
     }
 
-    /*@Before
+    @Before
     public void setup() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
 
         shopRepository.deleteAll();
         cityRepository.deleteAll();
 
-        final City moscow = cityRepository.save(new City(cityName));
-        shops.add(shopRepository.save(new Shop("Aushan", moscow)));
-        shops.add(shopRepository.save(new Shop("Prisma", moscow)));
-    }*/
+        spb = cityRepository.save(new City(cityNames.get(0)));
+        final City nsk = cityRepository.save(new City(cityNames.get(1)));
+
+        final Shop auchan = shopRepository.save(new Shop(shopNames.get(0)));
+        final Shop prisma = shopRepository.save(new Shop(shopNames.get(1)));
+        final Shop karusel = shopRepository.save(new Shop(shopNames.get(2)));
+        final Shop megas = shopRepository.save(new Shop(shopNames.get(3)));
+
+        spb.addShop(auchan).addShop(prisma).addShop(karusel);
+        nsk.addShop(auchan).addShop(megas);
+
+        shopRepository.save(Arrays.asList(auchan, prisma, karusel, megas));
+    }
 
     @Test
-    public void readShops() throws Exception {
-        mockMvc.perform(get("/shops/readShops/" + cityName))
+    public void findShops() throws Exception {
+        final List<Shop> shops = new ArrayList<>(spb.getShops());
+        mockMvc.perform(get("/shops/inCity/" + cityNames.get(0)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].id", is(shops.get(0).getId().intValue())))
                 .andExpect(jsonPath("$[0].name", is(shops.get(0).getName())))
                 .andExpect(jsonPath("$[1].id", is(shops.get(1).getId().intValue())))
-                .andExpect(jsonPath("$[1].name", is(shops.get(1).getName())));
+                .andExpect(jsonPath("$[1].name", is(shops.get(1).getName())))
+                .andExpect(jsonPath("$[2].id", is(shops.get(2).getId().intValue())))
+                .andExpect(jsonPath("$[2].name", is(shops.get(2).getName())));
     }
 
     protected String json(Object o) throws IOException {

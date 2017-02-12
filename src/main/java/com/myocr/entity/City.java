@@ -17,32 +17,32 @@ public class City {
     @ManyToMany(mappedBy = "cities")
     private Set<Shop> shops = new HashSet<>();
 
-    public City(String name, Set<Shop> shops) {
-        this.name = name;
-        this.shops = shops;
-    }
-
     public City(String name) {
         this.name = name;
+        shops = new HashSet<>();
     }
 
     City() {
     } // jpa only
 
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public City addShop(Shop shop) {
+        shops.add(shop);
+        if (!shop.contains(this)) {
+            shop.addCity(this);
+        }
+        return this;
+    }
+
+    public boolean contains(Shop shop) {
+        return shops.contains(shop);
     }
 
     public Set<Shop> getShops() {

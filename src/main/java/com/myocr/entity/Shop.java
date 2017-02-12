@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,44 +19,36 @@ public class Shop {
     private String name;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "shop_city",
-            joinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false))
     private Set<City> cities;
-
-    public Shop(String name, Set<City> cities) {
-        this.name = name;
-        this.cities = cities;
-    }
 
     public Shop(String name) {
         this.name = name;
+        cities = new HashSet<>();
     }
 
     Shop() {
     } // jpa only
 
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public boolean contains(City city) {
+        return cities.contains(city);
     }
 
-    public Set<City> getCities() {
-        return cities;
-    }
-
-    public void setCities(Set<City> cities) {
-        this.cities = cities;
+    public Shop addCity(City city) {
+        cities.add(city);
+        if (!city.contains(this)) {
+            city.addShop(this);
+        }
+        return this;
     }
 
     @Override
