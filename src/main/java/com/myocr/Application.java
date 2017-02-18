@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -21,6 +23,10 @@ public class Application implements CommandLineRunner {
     @Autowired
     private ShopRepository shopRepository;
 
+    private List<String> cityNames = Arrays.asList("Spb", "Nsk");
+    private List<String> shopNames = Arrays.asList("Auchan", "Prisma", "Karusel", "Megas");
+    private City spb;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -28,37 +34,20 @@ public class Application implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... strings) throws Exception {
-        final City city = new City("Novosibirsk");
-        final Shop shop = new Shop("Auchan");
+        spb = cityRepository.save(new City(cityNames.get(0)));
+        final City nsk = cityRepository.save(new City(cityNames.get(1)));
 
-        final CityShop cityShop = new CityShop();
-        cityShop.setCity(city);
-        cityShop.setShop(shop);
+        final Shop auchan = new Shop(shopNames.get(0));
+        final Shop prisma = new Shop(shopNames.get(1));
+        final Shop karusel = new Shop(shopNames.get(2));
+        final Shop megas = new Shop(shopNames.get(3));
 
-        shop.getCityShops().add(cityShop);
-        city.getCityShops().add(cityShop);
+        CityShop.link(spb, auchan);
+        CityShop.link(spb, prisma);
+        CityShop.link(spb, karusel);
+        CityShop.link(nsk, auchan);
+        CityShop.link(nsk, megas);
 
-        System.out.println(shopRepository.count());
-
-        cityRepository.save(city);
-        shopRepository.save(shop);
-
-        // test
-        System.out.println(shopRepository.count());
-        final Shop shop1 = shopRepository.findOne(1L);
-        System.out.println(shop1.getCityShops().size());
-
-        // update
-        shop.getCityShops().remove(cityShop);
-        shopRepository.save(shop);
-
-        // test
-        System.out.println(shopRepository.count());
-        final Shop shop2 = shopRepository.findOne(1L);
-        System.out.println(shop2.getCityShops().size());
-
-        // test
-        final City city1 = cityRepository.findOne(1L);
-        System.out.println(city1.getCityShops().size());
+        shopRepository.save(Arrays.asList(auchan, prisma, karusel, megas));
     }
 }

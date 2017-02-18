@@ -20,6 +20,20 @@ public class CityShop implements Serializable {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
+    CityShop() {
+    } // jpa only
+
+    public CityShop(City city, Shop shop) {
+        this.city = city;
+        this.shop = shop;
+    }
+
+    public static void link(City city, Shop shop) {
+        final CityShop cityShop = new CityShop(city, shop);
+        city.addCityShop(cityShop);
+        shop.addCityShop(cityShop);
+    }
+
     public City getCity() {
         return city;
     }

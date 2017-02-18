@@ -1,5 +1,7 @@
 package com.myocr.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +15,10 @@ public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private String name;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "city")
     private List<CityShop> cityShops = new ArrayList<>();
 
@@ -40,21 +45,9 @@ public class City {
         this.cityShops = cityShops;
     }
 
-    /*public City addShop(Shop shop) {
-        shops.add(shop);
-        if (!shop.contains(this)) {
-            shop.addCity(this);
-        }
-        return this;
+    public void addCityShop(CityShop cityShop) {
+        cityShops.add(cityShop);
     }
-
-    public boolean contains(Shop shop) {
-        return shops.contains(shop);
-    }
-
-    public List<Shop> getShops() {
-        return shops;
-    }*/
 
     /*@Override
     public String toString() {

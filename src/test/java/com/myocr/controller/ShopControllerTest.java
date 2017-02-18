@@ -2,6 +2,7 @@ package com.myocr.controller;
 
 import com.myocr.Application;
 import com.myocr.entity.City;
+import com.myocr.entity.CityShop;
 import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.ShopRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,20 +82,26 @@ public class ShopControllerTest {
         spb = cityRepository.save(new City(cityNames.get(0)));
         final City nsk = cityRepository.save(new City(cityNames.get(1)));
 
-        final Shop auchan = shopRepository.save(new Shop(shopNames.get(0)));
-        final Shop prisma = shopRepository.save(new Shop(shopNames.get(1)));
-        final Shop karusel = shopRepository.save(new Shop(shopNames.get(2)));
-        final Shop megas = shopRepository.save(new Shop(shopNames.get(3)));
+        final Shop auchan = new Shop(shopNames.get(0));
+        final Shop prisma = new Shop(shopNames.get(1));
+        final Shop karusel = new Shop(shopNames.get(2));
+        final Shop megas = new Shop(shopNames.get(3));
 
-        spb.addShop(auchan).addShop(prisma).addShop(karusel);
-        nsk.addShop(auchan).addShop(megas);
+        CityShop.link(spb, auchan);
+        CityShop.link(spb, prisma);
+        CityShop.link(spb, karusel);
+        CityShop.link(nsk, auchan);
+        CityShop.link(nsk, megas);
 
         shopRepository.save(Arrays.asList(auchan, prisma, karusel, megas));
     }
 
     @Test
     public void findShops() throws Exception {
-        final List<Shop> shops = spb.getShops();
+        final Iterable<Shop> responseShops = shopRepository.findAll();
+        final List<Shop> shops = new ArrayList<>();
+        responseShops.forEach(shops::add); // lambda iterable to list
+
         mockMvc.perform(get("/shops/inCity/" + cityNames.get(0)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
