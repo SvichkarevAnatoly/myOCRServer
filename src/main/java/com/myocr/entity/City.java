@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +14,8 @@ public class City {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    @ManyToMany(mappedBy = "cities")
-    private List<Shop> shops = new ArrayList<>();
+    @OneToMany(mappedBy = "city")
+    private List<CityShop> cityShops = new ArrayList<>();
 
     public City(String name) {
         this.name = name;
@@ -32,7 +32,15 @@ public class City {
         return name;
     }
 
-    public City addShop(Shop shop) {
+    public List<CityShop> getCityShops() {
+        return cityShops;
+    }
+
+    public void setCityShops(List<CityShop> cityShops) {
+        this.cityShops = cityShops;
+    }
+
+    /*public City addShop(Shop shop) {
         shops.add(shop);
         if (!shop.contains(this)) {
             shop.addCity(this);
@@ -46,9 +54,9 @@ public class City {
 
     public List<Shop> getShops() {
         return shops;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public String toString() {
         String result = String.format(
                 "City [id=%d, name='%s']%n",
@@ -62,5 +70,5 @@ public class City {
         }
 
         return result;
-    }
+    }*/
 }

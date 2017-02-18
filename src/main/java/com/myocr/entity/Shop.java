@@ -5,9 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +15,8 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "shop_city",
-            joinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false))
-    private List<City> cities = new ArrayList<>();
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CityShop> cityShops = new ArrayList<>();
 
     public Shop(String name) {
         this.name = name;
@@ -38,7 +33,15 @@ public class Shop {
         return name;
     }
 
-    public boolean contains(City city) {
+    public List<CityShop> getCityShops() {
+        return cityShops;
+    }
+
+    public void setCityShops(List<CityShop> cityShops) {
+        this.cityShops = cityShops;
+    }
+
+    /*public boolean contains(City city) {
         return cities.contains(city);
     }
 
@@ -64,5 +67,5 @@ public class Shop {
         }
 
         return result;
-    }
+    }*/
 }
