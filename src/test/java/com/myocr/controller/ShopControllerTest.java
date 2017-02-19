@@ -82,10 +82,10 @@ public class ShopControllerTest {
         spb = cityRepository.save(new City(cityNames.get(0)));
         final City nsk = cityRepository.save(new City(cityNames.get(1)));
 
-        final Shop auchan = new Shop(shopNames.get(0));
-        final Shop prisma = new Shop(shopNames.get(1));
-        final Shop karusel = new Shop(shopNames.get(2));
-        final Shop megas = new Shop(shopNames.get(3));
+        final Shop auchan = shopRepository.save(new Shop(shopNames.get(0)));
+        final Shop prisma = shopRepository.save(new Shop(shopNames.get(1)));
+        final Shop karusel = shopRepository.save(new Shop(shopNames.get(2)));
+        final Shop megas = shopRepository.save(new Shop(shopNames.get(3)));
 
         CityShop.link(spb, auchan);
         CityShop.link(spb, prisma);

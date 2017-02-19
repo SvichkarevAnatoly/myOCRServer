@@ -2,25 +2,22 @@ package com.myocr.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class City {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "city")
-    private List<CityShop> cityShops = new ArrayList<>();
+    private Set<CityShop> cityShops = new HashSet<>();
 
     public City(String name) {
         this.name = name;
@@ -29,19 +26,31 @@ public class City {
     City() {
     } // jpa only
 
+    @Id
+    @GeneratedValue
     public Long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<CityShop> getCityShops() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @OneToMany(mappedBy = "cityShopId.city",
+            cascade = CascadeType.ALL)
+    public Set<CityShop> getCityShops() {
         return cityShops;
     }
 
-    public void setCityShops(List<CityShop> cityShops) {
+    public void setCityShops(Set<CityShop> cityShops) {
         this.cityShops = cityShops;
     }
 

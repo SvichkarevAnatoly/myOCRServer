@@ -1,52 +1,60 @@
 package com.myocr.entity;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import java.io.Serializable;
+import javax.persistence.Transient;
 
 @Entity
-@Table(name = "city_shop")
-public class CityShop implements Serializable {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city;
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
+@AssociationOverrides({
+        @AssociationOverride(name = "cityShopId.city",
+                joinColumns = @JoinColumn(name = "city_id")),
+        @AssociationOverride(name = "cityShopId.shop",
+                joinColumns = @JoinColumn(name = "shop_id"))})
+public class CityShop {
+    private CityShopId cityShopId = new CityShopId();
 
     CityShop() {
     } // jpa only
 
     public CityShop(City city, Shop shop) {
-        this.city = city;
-        this.shop = shop;
+        setCity(city);
+        setShop(shop);
     }
 
-    public static void link(City city, Shop shop) {
+    public static CityShop link(City city, Shop shop) {
         final CityShop cityShop = new CityShop(city, shop);
         city.addCityShop(cityShop);
         shop.addCityShop(cityShop);
+        return cityShop;
     }
 
+    @EmbeddedId
+    public CityShopId getCityShopId() {
+        return cityShopId;
+    }
+
+    public void setCityShopId(CityShopId cityShopId) {
+        this.cityShopId = cityShopId;
+    }
+
+    @Transient
     public City getCity() {
-        return city;
+        return cityShopId.getCity();
     }
 
     public void setCity(City city) {
-        this.city = city;
+        cityShopId.setCity(city);
     }
 
+    @Transient
     public Shop getShop() {
-        return shop;
+        return cityShopId.getShop();
     }
 
     public void setShop(Shop shop) {
-        this.shop = shop;
+        cityShopId.setShop(shop);
     }
 }
