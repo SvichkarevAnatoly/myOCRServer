@@ -31,10 +31,11 @@ public class CityShop implements Serializable {
         this.shop = shop;
     }
 
-    public static void link(City city, Shop shop) {
+    public static CityShop link(City city, Shop shop) {
         final CityShop cityShop = new CityShop(city, shop);
         city.addCityShop(cityShop);
         shop.addCityShop(cityShop);
+        return cityShop;
     }
 
     public City getCity() {
