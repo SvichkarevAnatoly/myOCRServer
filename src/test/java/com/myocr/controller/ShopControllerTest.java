@@ -12,15 +12,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +24,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,12 +40,8 @@ public class ShopControllerTest {
 
     private MockMvc mockMvc;
 
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
     private List<String> cityNames = Arrays.asList("Spb", "Nsk");
     private List<String> shopNames = Arrays.asList("Auchan", "Prisma", "Karusel", "Megas");
-
-    private City spb;
 
     @Autowired
     private CityRepository cityRepository;
@@ -61,17 +52,6 @@ public class ShopControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream()
-                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-                .findAny()
-                .orElse(null);
-
-        assertNotNull("the JSON message converter must not be null",
-                this.mappingJackson2HttpMessageConverter);
-    }
-
     @Before
     public void setup() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
@@ -79,7 +59,7 @@ public class ShopControllerTest {
         shopRepository.deleteAll();
         cityRepository.deleteAll();
 
-        spb = cityRepository.save(new City(cityNames.get(0)));
+        final City spb = cityRepository.save(new City(cityNames.get(0)));
         final City nsk = cityRepository.save(new City(cityNames.get(1)));
 
         final Shop auchan = new Shop(shopNames.get(0));
@@ -112,12 +92,5 @@ public class ShopControllerTest {
                 .andExpect(jsonPath("$[1].name", is(shops.get(1).getName())))
                 .andExpect(jsonPath("$[2].id", is(shops.get(2).getId().intValue())))
                 .andExpect(jsonPath("$[2].name", is(shops.get(2).getName())));
-    }
-
-    protected String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
     }
 }
