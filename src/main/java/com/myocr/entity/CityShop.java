@@ -1,6 +1,7 @@
 package com.myocr.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,11 +12,13 @@ import java.io.Serializable;
 @Table(name = "city_shop")
 public class CityShop implements Serializable {
     @Id
+    @GeneratedValue
+    private long id;
+
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
