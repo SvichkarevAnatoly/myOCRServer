@@ -5,19 +5,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Shop {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;
 
     @JsonIgnore
-    private Set<CityShop> cityShops = new HashSet<>();
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CityShop> cityShops = new ArrayList<>();
 
     public Shop(String name) {
         this.name = name;
@@ -26,31 +30,19 @@ public class Shop {
     Shop() {
     } // jpa only
 
-    @Id
-    @GeneratedValue
     public Long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @OneToMany(mappedBy = "cityShopId.shop",
-            cascade = CascadeType.ALL)
-    public Set<CityShop> getCityShops() {
+    public List<CityShop> getCityShops() {
         return cityShops;
     }
 
-    public void setCityShops(Set<CityShop> cityShops) {
+    public void setCityShops(List<CityShop> cityShops) {
         this.cityShops = cityShops;
     }
 
