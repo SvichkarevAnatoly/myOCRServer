@@ -26,6 +26,12 @@ public class Price {
     public Price() {
     }
 
+    public Price(String value, ReceiptItem receiptItem, CityShop cityShop) {
+        this.value = value;
+        this.receiptItem = receiptItem;
+        this.cityShop = cityShop;
+    }
+
     public long getId() {
         return id;
     }
