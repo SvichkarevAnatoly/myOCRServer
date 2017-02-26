@@ -1,15 +1,11 @@
-package com.myocr;
+package com.myocr.repository;
 
+import com.myocr.Application;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.ReceiptItem;
 import com.myocr.entity.Shop;
-import com.myocr.repository.CityRepository;
-import com.myocr.repository.CityShopReceiptItemRepository;
-import com.myocr.repository.CityShopRepository;
-import com.myocr.repository.ReceiptItemRepository;
-import com.myocr.repository.ShopRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
