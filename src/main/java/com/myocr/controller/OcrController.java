@@ -2,6 +2,8 @@ package com.myocr.controller;
 
 import com.myocr.model.ocr.Tesseract;
 import org.bytedeco.javacpp.lept;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,19 +17,19 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/ocr")
 public class OcrController {
+    final static Logger log = LoggerFactory.getLogger(OcrController.class);
+
     @PostMapping("/image")
     public String handleFileUpload(@RequestParam("file") MultipartFile image) throws IOException {
-        // save(image);
+        log.info(image.getOriginalFilename());
 
         final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
 
         final Tesseract tesseract = new Tesseract("rus");
-
         final String ocrText = tesseract.ocr(pix);
         pix.deallocate();
-        System.out.println(ocrText);
 
-        // final OcrResponse ocrResponse = new OcrResponse(ocrText);
+        log.info(ocrText);
 
         return ocrText;
     }
