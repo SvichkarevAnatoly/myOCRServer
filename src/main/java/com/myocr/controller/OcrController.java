@@ -1,5 +1,7 @@
 package com.myocr.controller;
 
+import com.myocr.controller.json.ResponseOcrLines;
+import com.myocr.model.ocr.OcrUtil;
 import com.myocr.model.ocr.Tesseract;
 import org.bytedeco.javacpp.lept;
 import org.slf4j.Logger;
@@ -20,18 +22,19 @@ public class OcrController {
     final static Logger log = LoggerFactory.getLogger(OcrController.class);
 
     @PostMapping("/image")
-    public String handleFileUpload(@RequestParam("file") MultipartFile image) throws IOException {
+    public ResponseOcrLines ocrImage(@RequestParam("file") MultipartFile image) throws IOException {
         log.info(image.getOriginalFilename());
 
         final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
-
         final Tesseract tesseract = new Tesseract("rus");
+
         final String ocrText = tesseract.ocr(pix);
         pix.deallocate();
+        tesseract.release();
 
         log.info(ocrText);
 
-        return ocrText;
+        return new ResponseOcrLines(OcrUtil.parse(ocrText));
     }
 
     private File save(MultipartFile file) throws IOException {
