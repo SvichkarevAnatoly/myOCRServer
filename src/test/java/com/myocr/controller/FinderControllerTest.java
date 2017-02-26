@@ -75,13 +75,13 @@ public class FinderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
 
-                .andExpect(jsonPath("$.responseFindResults", hasSize(2)))
-                .andExpect(jsonPath("$.responseFindResults[0].bestScore", is(100)))
-                .andExpect(jsonPath("$.responseFindResults[0].matches", hasSize(1)))
-                .andExpect(jsonPath("$.responseFindResults[0].matches[0]", is("item1")))
-                .andExpect(jsonPath("$.responseFindResults[1].bestScore", is(100)))
-                .andExpect(jsonPath("$.responseFindResults[1].matches", hasSize(1)))
-                .andExpect(jsonPath("$.responseFindResults[1].matches[0]", is("item2")));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].matches", hasSize(1)))
+                .andExpect(jsonPath("$[0].matches[0].match", is("item1")))
+                .andExpect(jsonPath("$[0].matches[0].score", is(100)))
+                .andExpect(jsonPath("$[1].matches", hasSize(1)))
+                .andExpect(jsonPath("$[1].matches[0].match", is("item2")))
+                .andExpect(jsonPath("$[1].matches[0].score", is(100)));
     }
 
     private String json(Object o) throws IOException {

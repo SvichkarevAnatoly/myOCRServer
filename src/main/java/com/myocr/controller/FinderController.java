@@ -2,7 +2,7 @@ package com.myocr.controller;
 
 import com.myocr.controller.json.RequestReceipt;
 import com.myocr.controller.json.ResponseFindResult;
-import com.myocr.controller.json.ResponseReceiptFindResults;
+import com.myocr.controller.json.ResponseMatch;
 import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.PriceRepository;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -39,13 +39,14 @@ public class FinderController {
     }
 
     @PostMapping("/receipt")
-    public ResponseReceiptFindResults findReceipt(@RequestBody RequestReceipt request) {
+    public List<ResponseFindResult> findReceipt(@RequestBody RequestReceipt request) {
         final List<ResponseFindResult> results = new ArrayList<>();
         for (String item : request.getItems()) {
-            final ResponseFindResult findResult = new ResponseFindResult(100, Arrays.asList(item));
+            final ResponseMatch match = new ResponseMatch(item, 100);
+            final ResponseFindResult findResult = new ResponseFindResult(Collections.singletonList(match));
             results.add(findResult);
         }
 
-        return new ResponseReceiptFindResults(results);
+        return results;
     }
 }
