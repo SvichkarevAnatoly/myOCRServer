@@ -1,21 +1,26 @@
 package com.myocr.controller.json;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RequestPriceBody {
     private String cityName;
     private String shopName;
 
-    private String receiptItemName;
-    private String priceValue;
+    private List<RequestReceiptPriceItem> items = new ArrayList<>();
 
     public RequestPriceBody() {
     }
 
-    public RequestPriceBody(String cityName, String shopName,
-                            String receiptItemName, String priceValue) {
+    public RequestPriceBody(String cityName, String shopName) {
         this.cityName = cityName;
         this.shopName = shopName;
-        this.receiptItemName = receiptItemName;
-        this.priceValue = priceValue;
+    }
+
+    public RequestPriceBody(String cityName, String shopName, List<RequestReceiptPriceItem> items) {
+        this.cityName = cityName;
+        this.shopName = shopName;
+        this.items = items;
     }
 
     public String getCityName() {
@@ -34,19 +39,11 @@ public class RequestPriceBody {
         this.shopName = shopName;
     }
 
-    public String getReceiptItemName() {
-        return receiptItemName;
+    public List<RequestReceiptPriceItem> getItems() {
+        return items;
     }
 
-    public void setReceiptItemName(String receiptItemName) {
-        this.receiptItemName = receiptItemName;
-    }
-
-    public String getPriceValue() {
-        return priceValue;
-    }
-
-    public void setPriceValue(String priceValue) {
-        this.priceValue = priceValue;
+    public void setItems(List<RequestReceiptPriceItem> items) {
+        this.items = items;
     }
 }

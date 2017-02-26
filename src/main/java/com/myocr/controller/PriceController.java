@@ -1,6 +1,7 @@
 package com.myocr.controller;
 
 import com.myocr.controller.json.RequestPriceBody;
+import com.myocr.controller.json.RequestReceiptPriceItem;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.Price;
 import com.myocr.entity.ReceiptItem;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/prices")
@@ -28,13 +32,17 @@ public class PriceController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public Price save(@RequestBody RequestPriceBody request) {
+    public Iterable<Price> save(@RequestBody RequestPriceBody request) {
         final CityShop cityShop = cityShopRepository.findByCityNameAndShopName(
                 request.getCityName(), request.getShopName());
 
-        final ReceiptItem receiptItem = receiptItemRepository.findByName(request.getReceiptItemName());
+        final List<Price> prices = new ArrayList<>();
+        for (RequestReceiptPriceItem requestItem : request.getItems()) {
+            final ReceiptItem receiptItem = receiptItemRepository.findByName(requestItem.getName());
+            final Price price = new Price(requestItem.getPrice(), receiptItem, cityShop);
+            prices.add(price);
+        }
 
-        final Price price = new Price(request.getPriceValue(), receiptItem, cityShop);
-        return priceRepository.save(price);
+        return priceRepository.save(prices);
     }
 }
