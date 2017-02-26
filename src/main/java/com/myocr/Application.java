@@ -1,8 +1,6 @@
 package com.myocr;
 
 import com.myocr.entity.City;
-import com.myocr.entity.CityShop;
-import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class Application implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... strings) throws Exception {
-        spb = cityRepository.save(new City(cityNames.get(0)));
+        /*spb = cityRepository.save(new City(cityNames.get(0)));
         final City nsk = cityRepository.save(new City(cityNames.get(1)));
 
         final Shop auchan = new Shop(shopNames.get(0));
@@ -49,5 +47,7 @@ public class Application implements CommandLineRunner {
         CityShop.link(nsk, megas);
 
         shopRepository.save(Arrays.asList(auchan, prisma, karusel, megas));
+
+        // cityRepository.deleteAll();*/
     }
 }

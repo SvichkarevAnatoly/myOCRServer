@@ -19,7 +19,7 @@ public class Shop {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     private List<CityShop> cityShops = new ArrayList<>();
 
     public Shop(String name) {
