@@ -17,21 +17,16 @@ public class Price {
     private Date time;
 
     @ManyToOne
-    @JoinColumn(name = "city_shop_id")
-    private CityShop cityShop;
-
-    @ManyToOne
-    @JoinColumn(name = "receipt_item_id")
-    private ReceiptItem receiptItem;
+    @JoinColumn(name = "city_shop_receipt_item_id")
+    private CityShopReceiptItem cityShopReceiptItem;
 
     public Price() {
     }
 
-    public Price(String value, Date time, ReceiptItem receiptItem, CityShop cityShop) {
+    public Price(String value, Date time, CityShopReceiptItem cityShopReceiptItem) {
         this.value = value;
         this.time = time;
-        this.receiptItem = receiptItem;
-        this.cityShop = cityShop;
+        this.cityShopReceiptItem = cityShopReceiptItem;
     }
 
     public long getId() {
@@ -58,19 +53,11 @@ public class Price {
         this.time = time;
     }
 
-    public CityShop getCityShop() {
-        return cityShop;
+    public CityShopReceiptItem getCityShopReceiptItem() {
+        return cityShopReceiptItem;
     }
 
-    public void setCityShop(CityShop cityShop) {
-        this.cityShop = cityShop;
-    }
-
-    public ReceiptItem getReceiptItem() {
-        return receiptItem;
-    }
-
-    public void setReceiptItem(ReceiptItem receiptItem) {
-        this.receiptItem = receiptItem;
+    public void setCityShopReceiptItem(CityShopReceiptItem cityShopReceiptItem) {
+        this.cityShopReceiptItem = cityShopReceiptItem;
     }
 }

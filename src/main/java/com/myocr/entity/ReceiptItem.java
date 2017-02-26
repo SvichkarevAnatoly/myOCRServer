@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -21,14 +22,22 @@ public class ReceiptItem {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "receiptItem", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Price> prices = new ArrayList<>();
+    @OneToMany(mappedBy = "receiptItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<CityShopReceiptItem> cityShopReceiptItems = new ArrayList<>();
 
     public ReceiptItem() {
     } // jpa only
 
     public ReceiptItem(String name) {
         this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,11 +48,11 @@ public class ReceiptItem {
         this.name = name;
     }
 
-    public List<Price> getPrices() {
-        return prices;
+    public List<CityShopReceiptItem> getCityShopReceiptItems() {
+        return cityShopReceiptItems;
     }
 
-    public void setPrices(List<Price> prices) {
-        this.prices = prices;
+    public void setCityShopReceiptItems(List<CityShopReceiptItem> cityShopReceiptItems) {
+        this.cityShopReceiptItems = cityShopReceiptItems;
     }
 }
