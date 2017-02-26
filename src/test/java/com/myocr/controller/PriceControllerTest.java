@@ -71,7 +71,9 @@ public class PriceControllerTest {
     private City spb;
     private Shop auchan;
     private CityShop spbAuchan;
+
     private ReceiptItem pizza;
+    private ReceiptItem pasta;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -100,15 +102,19 @@ public class PriceControllerTest {
         auchan = shopRepository.save(auchan);
 
         pizza = receiptItemRepository.save(new ReceiptItem("Pizza"));
+        pasta = receiptItemRepository.save(new ReceiptItem("Pasta"));
     }
 
     @Test
     public void save() throws Exception {
-        final Price price = new Price("15.00", pizza, spbAuchan);
+        final Price pizzaPrice = new Price("15.00", pizza, spbAuchan);
+        final Price pastaPrice = new Price("10.00", pasta, spbAuchan);
 
-        final RequestReceiptPriceItem item = new RequestReceiptPriceItem(pizza.getName(), price.getValue());
         final List<RequestReceiptPriceItem> items = new ArrayList<>();
-        items.add(item);
+        final RequestReceiptPriceItem pizzaItem = new RequestReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
+        items.add(pizzaItem);
+        final RequestReceiptPriceItem pastaItem = new RequestReceiptPriceItem(pasta.getName(), pastaPrice.getValue());
+        items.add(pastaItem);
 
         final String savedPriceJson = json(
                 new RequestPriceBody(spb.getName(), auchan.getName(), items));
@@ -118,14 +124,26 @@ public class PriceControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].value", is(price.getValue())))
+
+                .andExpect(jsonPath("$", hasSize(2)))
+
+                // pizza
+                .andExpect(jsonPath("$[0].value", is(pizzaPrice.getValue())))
                 .andExpect(jsonPath("$[0].receiptItem.name",
-                        is(price.getReceiptItem().getName())))
+                        is(pizzaPrice.getReceiptItem().getName())))
                 .andExpect(jsonPath("$[0].cityShop.city.name",
-                        is(price.getCityShop().getCity().getName())))
+                        is(pizzaPrice.getCityShop().getCity().getName())))
                 .andExpect(jsonPath("$[0].cityShop.shop.name",
-                        is(price.getCityShop().getShop().getName())));
+                        is(pizzaPrice.getCityShop().getShop().getName())))
+
+                // pasta
+                .andExpect(jsonPath("$[1].value", is(pastaPrice.getValue())))
+                .andExpect(jsonPath("$[1].receiptItem.name",
+                        is(pastaPrice.getReceiptItem().getName())))
+                .andExpect(jsonPath("$[1].cityShop.city.name",
+                        is(pastaPrice.getCityShop().getCity().getName())))
+                .andExpect(jsonPath("$[1].cityShop.shop.name",
+                        is(pastaPrice.getCityShop().getShop().getName())));
     }
 
     private String json(Object o) throws IOException {
