@@ -14,9 +14,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -24,7 +21,7 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
 @TestPropertySource(locations = "classpath:test.properties")
-public class ReceiptItemTest {
+public class CityShopReceiptItemRepositoryTest {
 
     @Autowired
     private CityShopReceiptItemRepository cityShopReceiptItemRepository;
@@ -42,29 +39,22 @@ public class ReceiptItemTest {
     private ReceiptItemRepository receiptItemRepository;
 
     @Test
-    public void findByNameAndCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName() throws Exception {
+    public void findByReceiptItemNameAndCityShopCityNameAndCityShopShopName() throws Exception {
         final City spb = cityRepository.save(new City("Spb"));
         final Shop auchan = shopRepository.save(new Shop("Auchan"));
         CityShop spbAuchan = CityShop.link(spb, auchan);
         spbAuchan = cityShopRepository.save(spbAuchan);
         final ReceiptItem pizza = receiptItemRepository.save(new ReceiptItem("Pizza"));
-        final CityShopReceiptItem spbAuchanPizza = new CityShopReceiptItem(pizza, spbAuchan);
-        pizza.getCityShopReceiptItems().add(spbAuchanPizza);
-        cityShopReceiptItemRepository.save(spbAuchanPizza);
+        cityShopReceiptItemRepository.save(new CityShopReceiptItem(pizza, spbAuchan));
 
-        assertThat(receiptItemRepository.count(), is(1L));
+        assertThat(cityShopReceiptItemRepository.count(), is(1L));
 
-        final ReceiptItem item = receiptItemRepository
-                .findByNameAndCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName(
+        final CityShopReceiptItem item = cityShopReceiptItemRepository
+                .findByReceiptItemNameAndCityShopCityNameAndCityShopShopName(
                         "Pizza", "Spb", "Auchan");
 
-        assertThat(item.getName(), is("Pizza"));
-
-        final List<CityShopReceiptItem> cityShopReceiptItems = item.getCityShopReceiptItems();
-        assertThat(cityShopReceiptItems, hasSize(1));
-
-        final CityShopReceiptItem cityShopReceiptItem = cityShopReceiptItems.get(0);
-        assertThat(cityShopReceiptItem.getCityShop().getCity().getName(), is("Spb"));
-        assertThat(cityShopReceiptItem.getCityShop().getShop().getName(), is("Auchan"));
+        assertThat(item.getReceiptItem().getName(), is("Pizza"));
+        assertThat(item.getCityShop().getCity().getName(), is("Spb"));
+        assertThat(item.getCityShop().getShop().getName(), is("Auchan"));
     }
 }
