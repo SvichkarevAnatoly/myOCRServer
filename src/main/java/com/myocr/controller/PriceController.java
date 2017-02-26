@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -36,10 +38,11 @@ public class PriceController {
         final CityShop cityShop = cityShopRepository.findByCityNameAndShopName(
                 request.getCityName(), request.getShopName());
 
+        final Date now = Calendar.getInstance().getTime();
         final List<Price> prices = new ArrayList<>();
         for (RequestReceiptPriceItem requestItem : request.getItems()) {
             final ReceiptItem receiptItem = receiptItemRepository.findByName(requestItem.getName());
-            final Price price = new Price(requestItem.getPrice(), receiptItem, cityShop);
+            final Price price = new Price(requestItem.getPrice(), now, receiptItem, cityShop);
             prices.add(price);
         }
 

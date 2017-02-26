@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.Date;
 
 @Entity
 public class Price {
@@ -13,7 +14,7 @@ public class Price {
     private long id;
 
     private String value;
-    // private Date date;
+    private Date time;
 
     @ManyToOne
     @JoinColumn(name = "city_shop_id")
@@ -26,8 +27,9 @@ public class Price {
     public Price() {
     }
 
-    public Price(String value, ReceiptItem receiptItem, CityShop cityShop) {
+    public Price(String value, Date time, ReceiptItem receiptItem, CityShop cityShop) {
         this.value = value;
+        this.time = time;
         this.receiptItem = receiptItem;
         this.cityShop = cityShop;
     }
@@ -46,6 +48,14 @@ public class Price {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public CityShop getCityShop() {

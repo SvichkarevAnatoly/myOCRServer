@@ -30,8 +30,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
@@ -107,8 +110,9 @@ public class PriceControllerTest {
 
     @Test
     public void save() throws Exception {
-        final Price pizzaPrice = new Price("15.00", pizza, spbAuchan);
-        final Price pastaPrice = new Price("10.00", pasta, spbAuchan);
+        final Date now = Calendar.getInstance().getTime();
+        final Price pizzaPrice = new Price("15.00", now, pizza, spbAuchan);
+        final Price pastaPrice = new Price("10.00", now, pasta, spbAuchan);
 
         final List<RequestReceiptPriceItem> items = new ArrayList<>();
         final RequestReceiptPriceItem pizzaItem = new RequestReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
@@ -129,6 +133,8 @@ public class PriceControllerTest {
 
                 // pizza
                 .andExpect(jsonPath("$[0].value", is(pizzaPrice.getValue())))
+                .andExpect(jsonPath("$[0].time",
+                        greaterThan(pizzaPrice.getTime().getTime())))
                 .andExpect(jsonPath("$[0].receiptItem.name",
                         is(pizzaPrice.getReceiptItem().getName())))
                 .andExpect(jsonPath("$[0].cityShop.city.name",
@@ -138,6 +144,8 @@ public class PriceControllerTest {
 
                 // pasta
                 .andExpect(jsonPath("$[1].value", is(pastaPrice.getValue())))
+                .andExpect(jsonPath("$[0].time",
+                        greaterThan(pastaPrice.getTime().getTime())))
                 .andExpect(jsonPath("$[1].receiptItem.name",
                         is(pastaPrice.getReceiptItem().getName())))
                 .andExpect(jsonPath("$[1].cityShop.city.name",
