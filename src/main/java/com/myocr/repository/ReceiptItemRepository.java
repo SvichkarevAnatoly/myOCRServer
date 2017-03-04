@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ReceiptItemRepository extends CrudRepository<ReceiptItem, Long> {
-    List<ReceiptItem> findByName(String name);
+    ReceiptItem findByName(String name);
 
     ReceiptItem findByNameAndCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName(String receiptItemName, String cityName, String shopName);
 
