@@ -3,21 +3,21 @@ package com.myocr.controller.json;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PriceBodyRequest {
+public class SavePriceRequest {
     private String cityName;
     private String shopName;
 
     private List<ReceiptPriceItem> items = new ArrayList<>();
 
-    public PriceBodyRequest() {
+    public SavePriceRequest() {
     }
 
-    public PriceBodyRequest(String cityName, String shopName) {
+    public SavePriceRequest(String cityName, String shopName) {
         this.cityName = cityName;
         this.shopName = shopName;
     }
 
-    public PriceBodyRequest(String cityName, String shopName, List<ReceiptPriceItem> items) {
+    public SavePriceRequest(String cityName, String shopName, List<ReceiptPriceItem> items) {
         this.cityName = cityName;
         this.shopName = shopName;
         this.items = items;
