@@ -1,6 +1,5 @@
 package com.myocr.controller;
 
-import com.myocr.controller.json.OcrLinesResponse;
 import com.myocr.model.ocr.OcrUtil;
 import com.myocr.model.ocr.Tesseract;
 import org.bytedeco.javacpp.lept;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ocr")
@@ -22,7 +22,7 @@ public class OcrController {
     final static Logger log = LoggerFactory.getLogger(OcrController.class);
 
     @PostMapping("/image")
-    public OcrLinesResponse ocrImage(@RequestParam("file") MultipartFile image) throws IOException {
+    public List<String> ocrImage(@RequestParam("file") MultipartFile image) throws IOException {
         log.info(image.getOriginalFilename());
 
         final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
@@ -34,7 +34,7 @@ public class OcrController {
 
         log.info(ocrText);
 
-        return new OcrLinesResponse(OcrUtil.parse(ocrText));
+        return OcrUtil.parse(ocrText);
     }
 
     private File save(MultipartFile file) throws IOException {
