@@ -33,6 +33,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -163,6 +165,34 @@ public class PriceControllerTest {
                         is(pastaPrice.getCityShopReceiptItem().getCityShop().getCity().getName())))
                 .andExpect(jsonPath("$[1].cityShopReceiptItem.cityShop.shop.name",
                         is(pastaPrice.getCityShopReceiptItem().getCityShop().getShop().getName())));
+    }
+
+    @Test
+    public void saveNotExistingReceiptItem() throws Exception {
+        final Date now = new Date();
+        final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
+                new SavePriceRequest.ReceiptPriceItem("chicken", "30.00"));
+
+        final String savedPriceJson = json(
+                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+        System.out.println(savedPriceJson);
+
+        assertThat(receiptItemRepository.count(), is(2L));
+        assertThat(cityShopReceiptItemRepository.count(), is(2L));
+
+        mockMvc.perform(post("/prices/save/")
+                .contentType(contentType).content(savedPriceJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].value", is("30.00")))
+                .andExpect(jsonPath("$[0].time", greaterThan(now.getTime())))
+                .andExpect(jsonPath("$[0].cityShopReceiptItem.receiptItem.name", is("chicken")));
+
+        assertThat(receiptItemRepository.count(), is(3L));
+        assertThat(cityShopReceiptItemRepository.count(), is(3L));
     }
 
     private String json(Object o) throws IOException {
