@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class PriceController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public Iterable<Price> save(@RequestBody SavePriceRequest request) {
-        final Date now = Calendar.getInstance().getTime();
+        final Date now = new Date();
         final List<Price> prices = new ArrayList<>();
         for (SavePriceRequest.ReceiptPriceItem requestItem : request.getItems()) {
             final CityShopReceiptItem item = cityShopReceiptItemRepository
