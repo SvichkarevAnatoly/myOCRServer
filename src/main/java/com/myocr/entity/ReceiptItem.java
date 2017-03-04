@@ -55,4 +55,12 @@ public class ReceiptItem {
     public void setCityShopReceiptItems(List<CityShopReceiptItem> cityShopReceiptItems) {
         this.cityShopReceiptItems = cityShopReceiptItems;
     }
+
+    @Override
+    public String toString() {
+        return "ReceiptItem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
