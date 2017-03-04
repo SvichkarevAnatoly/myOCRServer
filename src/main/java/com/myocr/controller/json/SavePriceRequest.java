@@ -47,7 +47,7 @@ public class SavePriceRequest {
         this.items = items;
     }
 
-    public class ReceiptPriceItem {
+    public static class ReceiptPriceItem {
         private String name;
         private String price;
 

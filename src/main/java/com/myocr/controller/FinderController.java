@@ -1,7 +1,6 @@
 package com.myocr.controller;
 
 import com.myocr.controller.json.FindResponse;
-import com.myocr.controller.json.Match;
 import com.myocr.controller.json.ReceiptRequest;
 import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
@@ -42,7 +41,7 @@ public class FinderController {
     public List<FindResponse> findReceipt(@RequestBody ReceiptRequest request) {
         final List<FindResponse> results = new ArrayList<>();
         for (String item : request.getItems()) {
-            final Match match = new Match(item, 100);
+            final FindResponse.Match match = new FindResponse.Match(item, 100);
             final FindResponse findResult = new FindResponse(Collections.singletonList(match));
             results.add(findResult);
         }
