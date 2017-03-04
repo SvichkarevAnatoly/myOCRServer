@@ -28,7 +28,6 @@ public class DataBaseFinderTest {
 
     @Test
     public void findGeneratedData() throws Exception {
-        //final String expectedReceiptItem = "expected";
         final String expectedReceiptItem = randomAlphabetic(10).toLowerCase();
 
         final StringBuilder sb = new StringBuilder(expectedReceiptItem);
