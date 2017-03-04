@@ -1,8 +1,8 @@
 package com.myocr.controller;
 
-import com.myocr.controller.json.RequestReceipt;
-import com.myocr.controller.json.ResponseFindResult;
-import com.myocr.controller.json.ResponseMatch;
+import com.myocr.controller.json.FindResponse;
+import com.myocr.controller.json.Match;
+import com.myocr.controller.json.ReceiptRequest;
 import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.PriceRepository;
@@ -39,11 +39,11 @@ public class FinderController {
     }
 
     @PostMapping("/receipt")
-    public List<ResponseFindResult> findReceipt(@RequestBody RequestReceipt request) {
-        final List<ResponseFindResult> results = new ArrayList<>();
+    public List<FindResponse> findReceipt(@RequestBody ReceiptRequest request) {
+        final List<FindResponse> results = new ArrayList<>();
         for (String item : request.getItems()) {
-            final ResponseMatch match = new ResponseMatch(item, 100);
-            final ResponseFindResult findResult = new ResponseFindResult(Collections.singletonList(match));
+            final Match match = new Match(item, 100);
+            final FindResponse findResult = new FindResponse(Collections.singletonList(match));
             results.add(findResult);
         }
 

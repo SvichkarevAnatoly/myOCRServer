@@ -1,13 +1,13 @@
 package com.myocr.controller.json;
 
-public class ResponseMatch {
+public class Match {
     private String match;
     private int score;
 
-    public ResponseMatch() {
+    public Match() {
     }
 
-    public ResponseMatch(String match, int score) {
+    public Match(String match, int score) {
         this.match = match;
         this.score = score;
     }

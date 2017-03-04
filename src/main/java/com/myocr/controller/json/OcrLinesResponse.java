@@ -3,13 +3,13 @@ package com.myocr.controller.json;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResponseOcrLines {
+public class OcrLinesResponse {
     private List<String> ocrLines = new ArrayList<>();
 
-    public ResponseOcrLines() {
+    public OcrLinesResponse() {
     }
 
-    public ResponseOcrLines(List<String> ocrLines) {
+    public OcrLinesResponse(List<String> ocrLines) {
         this.ocrLines = ocrLines;
     }
 

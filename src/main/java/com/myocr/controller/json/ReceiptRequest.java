@@ -1,23 +1,16 @@
 package com.myocr.controller.json;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class RequestPriceBody {
+public class ReceiptRequest {
     private String cityName;
     private String shopName;
+    private List<String> items;
 
-    private List<RequestReceiptPriceItem> items = new ArrayList<>();
-
-    public RequestPriceBody() {
+    public ReceiptRequest() {
     }
 
-    public RequestPriceBody(String cityName, String shopName) {
-        this.cityName = cityName;
-        this.shopName = shopName;
-    }
-
-    public RequestPriceBody(String cityName, String shopName, List<RequestReceiptPriceItem> items) {
+    public ReceiptRequest(String cityName, String shopName, List<String> items) {
         this.cityName = cityName;
         this.shopName = shopName;
         this.items = items;
@@ -39,11 +32,11 @@ public class RequestPriceBody {
         this.shopName = shopName;
     }
 
-    public List<RequestReceiptPriceItem> getItems() {
+    public List<String> getItems() {
         return items;
     }
 
-    public void setItems(List<RequestReceiptPriceItem> items) {
+    public void setItems(List<String> items) {
         this.items = items;
     }
 }

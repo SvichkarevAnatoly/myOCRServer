@@ -1,7 +1,7 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
-import com.myocr.controller.json.RequestReceipt;
+import com.myocr.controller.json.ReceiptRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,8 +66,8 @@ public class FinderControllerTest {
     @Test
     public void findReceipt() throws Exception {
         final List<String> items = Arrays.asList("item1", "item2");
-        final RequestReceipt requestReceipt = new RequestReceipt("Spb", "Auchan", items);
-        final String jsonRequestReceipt = json(requestReceipt);
+        final ReceiptRequest receiptRequest = new ReceiptRequest("Spb", "Auchan", items);
+        final String jsonRequestReceipt = json(receiptRequest);
 
         mockMvc.perform(post("/find/receipt/")
                 .contentType(contentType).content(jsonRequestReceipt))

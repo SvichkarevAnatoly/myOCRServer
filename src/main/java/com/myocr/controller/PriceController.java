@@ -1,7 +1,7 @@
 package com.myocr.controller;
 
-import com.myocr.controller.json.RequestPriceBody;
-import com.myocr.controller.json.RequestReceiptPriceItem;
+import com.myocr.controller.json.PriceBodyRequest;
+import com.myocr.controller.json.ReceiptPriceItem;
 import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.Price;
 import com.myocr.repository.CityShopReceiptItemRepository;
@@ -29,10 +29,10 @@ public class PriceController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public Iterable<Price> save(@RequestBody RequestPriceBody request) {
+    public Iterable<Price> save(@RequestBody PriceBodyRequest request) {
         final Date now = Calendar.getInstance().getTime();
         final List<Price> prices = new ArrayList<>();
-        for (RequestReceiptPriceItem requestItem : request.getItems()) {
+        for (ReceiptPriceItem requestItem : request.getItems()) {
             final CityShopReceiptItem item = cityShopReceiptItemRepository
                     .findByReceiptItemNameAndCityShopCityNameAndCityShopShopName(
                             requestItem.getName(), request.getCityName(), request.getShopName());

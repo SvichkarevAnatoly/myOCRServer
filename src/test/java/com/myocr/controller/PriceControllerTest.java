@@ -1,8 +1,8 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
-import com.myocr.controller.json.RequestPriceBody;
-import com.myocr.controller.json.RequestReceiptPriceItem;
+import com.myocr.controller.json.PriceBodyRequest;
+import com.myocr.controller.json.ReceiptPriceItem;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.CityShopReceiptItem;
@@ -126,14 +126,14 @@ public class PriceControllerTest {
         final Price pizzaPrice = new Price("15.00", now, spbAuchanPizza);
         final Price pastaPrice = new Price("10.00", now, spbAuchanPasta);
 
-        final List<RequestReceiptPriceItem> items = new ArrayList<>();
-        final RequestReceiptPriceItem pizzaItem = new RequestReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
+        final List<ReceiptPriceItem> items = new ArrayList<>();
+        final ReceiptPriceItem pizzaItem = new ReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
         items.add(pizzaItem);
-        final RequestReceiptPriceItem pastaItem = new RequestReceiptPriceItem(pasta.getName(), pastaPrice.getValue());
+        final ReceiptPriceItem pastaItem = new ReceiptPriceItem(pasta.getName(), pastaPrice.getValue());
         items.add(pastaItem);
 
         final String savedPriceJson = json(
-                new RequestPriceBody(spb.getName(), auchan.getName(), items));
+                new PriceBodyRequest(spb.getName(), auchan.getName(), items));
 
         mockMvc.perform(post("/prices/save/")
                 .contentType(contentType).content(savedPriceJson))

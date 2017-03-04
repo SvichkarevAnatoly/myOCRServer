@@ -1,13 +1,13 @@
 package com.myocr.controller.json;
 
-public class RequestReceiptPriceItem {
+public class ReceiptPriceItem {
     private String name;
     private String price;
 
-    public RequestReceiptPriceItem() {
+    public ReceiptPriceItem() {
     }
 
-    public RequestReceiptPriceItem(String name, String price) {
+    public ReceiptPriceItem(String name, String price) {
         this.name = name;
         this.price = price;
     }
