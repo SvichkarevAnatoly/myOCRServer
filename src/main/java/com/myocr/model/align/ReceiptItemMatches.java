@@ -1,17 +1,15 @@
-package com.myocr.controller.json;
-
-import com.myocr.model.align.Match;
+package com.myocr.model.align;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindResponse {
+public class ReceiptItemMatches {
     private List<Match> matches = new ArrayList<>();
 
-    public FindResponse() {
+    public ReceiptItemMatches() {
     }
 
-    public FindResponse(List<Match> matches) {
+    public ReceiptItemMatches(List<Match> matches) {
         this.matches = matches;
     }
 
