@@ -1,7 +1,6 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
-import com.myocr.controller.json.ReceiptPriceItem;
 import com.myocr.controller.json.SavePriceRequest;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
@@ -126,10 +125,10 @@ public class PriceControllerTest {
         final Price pizzaPrice = new Price("15.00", now, spbAuchanPizza);
         final Price pastaPrice = new Price("10.00", now, spbAuchanPasta);
 
-        final List<ReceiptPriceItem> items = new ArrayList<>();
-        final ReceiptPriceItem pizzaItem = new ReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
+        final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
+        final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
         items.add(pizzaItem);
-        final ReceiptPriceItem pastaItem = new ReceiptPriceItem(pasta.getName(), pastaPrice.getValue());
+        final SavePriceRequest.ReceiptPriceItem pastaItem = new SavePriceRequest.ReceiptPriceItem(pasta.getName(), pastaPrice.getValue());
         items.add(pastaItem);
 
         final String savedPriceJson = json(
