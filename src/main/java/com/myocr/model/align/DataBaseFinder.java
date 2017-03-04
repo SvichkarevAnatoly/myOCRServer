@@ -49,11 +49,11 @@ public class DataBaseFinder {
     }
 
     public List<ReceiptItemMatches> findAll(List<String> ocrReceiptItems) {
-        final List<ReceiptItemMatches> bestScoreProducts = new ArrayList<>(ocrReceiptItems.size());
-        for (String ocrProduct : ocrReceiptItems) {
-            final List<Match> matches = find(ocrProduct);
-            bestScoreProducts.add(new ReceiptItemMatches(matches));
+        final List<ReceiptItemMatches> receiptItemMatches = new ArrayList<>(ocrReceiptItems.size());
+        for (String ocrReceiptItem : ocrReceiptItems) {
+            final List<Match> matches = find(ocrReceiptItem);
+            receiptItemMatches.add(new ReceiptItemMatches(matches));
         }
-        return bestScoreProducts;
+        return receiptItemMatches;
     }
 }
