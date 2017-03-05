@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -31,10 +32,25 @@ public class OcrController {
     }
 
     @PostMapping("/image")
-    public List<ReceiptItemMatches> ocrImage(@RequestParam("file") MultipartFile image,
-                                             @RequestParam String city, @RequestParam String shop) throws IOException {
-        log.info(image.getOriginalFilename());
+    public List<ReceiptItemMatches> ocrImage(
+            @RequestParam MultipartFile receiptItemsImage,
+            @RequestParam MultipartFile pricesImage,
+            @RequestParam String city, @RequestParam String shop) throws IOException {
 
+        log.info(receiptItemsImage.getOriginalFilename());
+        log.info(pricesImage.getOriginalFilename());
+
+        final List<String> ocrReceiptItems = ocrReceiptItemsImage(receiptItemsImage);
+        log.info(Arrays.toString(ocrReceiptItems.toArray()));
+
+        final List<String> ocrPrices = ocrPricesImage(pricesImage);
+        log.info(Arrays.toString(ocrPrices.toArray()));
+
+        final ReceiptItemService service = new ReceiptItemService(receiptItemRepository);
+        return service.findReceipt(city, shop, ocrReceiptItems);
+    }
+
+    private List<String> ocrReceiptItemsImage(MultipartFile image) throws IOException {
         final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
         final Tesseract tesseract = new Tesseract("rus");
 
@@ -42,12 +58,19 @@ public class OcrController {
         pix.deallocate();
         tesseract.release();
 
-        log.info(ocrText);
+        return OcrUtil.parse(ocrText);
+    }
 
-        final List<String> ocrReceiptItems = OcrUtil.parse(ocrText);
+    private List<String> ocrPricesImage(MultipartFile image) throws IOException {
+        final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
+        final Tesseract tesseract = new Tesseract("rus");
+        tesseract.setCharWhitelist("0123456789. ");
 
-        final ReceiptItemService service = new ReceiptItemService(receiptItemRepository);
-        return service.findReceipt(city, shop, ocrReceiptItems);
+        final String ocrText = tesseract.ocr(pix);
+        pix.deallocate();
+        tesseract.release();
+
+        return OcrUtil.parse(ocrText);
     }
 
     private File save(MultipartFile file) throws IOException {
