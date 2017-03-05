@@ -13,6 +13,7 @@ import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.repository.ShopRepository;
+import com.myocr.util.TimeUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -193,6 +194,41 @@ public class PriceControllerTest {
 
         assertThat(receiptItemRepository.count(), is(3L));
         assertThat(cityShopReceiptItemRepository.count(), is(3L));
+    }
+
+    @Test
+    public void saveWithDate() throws Exception {
+        final String timeString = "31-08-1982 10:20:56";
+
+        final Date time = TimeUtil.parse(timeString);
+        final Price pizzaPrice = new Price("15.00", time, spbAuchanPizza);
+
+        final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
+        final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(
+                pizza.getName(), pizzaPrice.getValue());
+        items.add(pizzaItem);
+
+        final String savedPriceJson = json(
+                new SavePriceRequest(spb.getName(), auchan.getName(), timeString, items));
+
+        mockMvc.perform(post("/prices/save/")
+                .contentType(contentType).content(savedPriceJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
+                .andExpect(jsonPath("$", hasSize(1)))
+
+                // pizza
+                .andExpect(jsonPath("$[0].value", is(pizzaPrice.getValue())))
+                .andExpect(jsonPath("$[0].time",
+                        is(TimeUtil.parse(timeString).getTime())))
+                .andExpect(jsonPath("$[0].cityShopReceiptItem.receiptItem.name",
+                        is(pizzaPrice.getCityShopReceiptItem().getReceiptItem().getName())))
+                .andExpect(jsonPath("$[0].cityShopReceiptItem.cityShop.city.name",
+                        is(pizzaPrice.getCityShopReceiptItem().getCityShop().getCity().getName())))
+                .andExpect(jsonPath("$[0].cityShopReceiptItem.cityShop.shop.name",
+                        is(pizzaPrice.getCityShopReceiptItem().getCityShop().getShop().getName())));
     }
 
     private String json(Object o) throws IOException {
