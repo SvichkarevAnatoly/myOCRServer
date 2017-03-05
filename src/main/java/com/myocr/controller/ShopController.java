@@ -20,6 +20,6 @@ public class ShopController {
 
     @RequestMapping(value = "/inCity/{cityName}", method = RequestMethod.GET)
     Collection<Shop> findShopsByCityName(@PathVariable String cityName) {
-        return shopRepository.findByCityShops_City_Name(cityName);
+        return shopRepository.findByCityShopsCityName(cityName);
     }
 }
