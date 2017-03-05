@@ -67,7 +67,7 @@ public class OcrController {
     private List<String> ocrPricesImage(MultipartFile image) throws IOException {
         final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
         final Tesseract tesseract = new Tesseract("rus");
-        tesseract.setCharWhitelist("0123456789. ");
+        tesseract.setCharWhitelist("0123456789.");
 
         final String ocrText = tesseract.ocr(pix);
         pix.deallocate();

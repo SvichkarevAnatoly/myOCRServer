@@ -20,8 +20,13 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -71,6 +76,17 @@ public class OcrControllerTest {
         mockMvc.perform(fileUpload("/ocr/image?city=Sbp&shop=Auchan")
                 .file(receiptItemsImage)
                 .file(pricesImage))
-                .andExpect(status().isOk());
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
+                .andExpect(jsonPath("$.itemMatches", hasSize(4)))
+
+
+                .andExpect(jsonPath("$.prices", hasSize(4)))
+                .andExpect(jsonPath("$.prices[0]", is("187.14")))
+                .andExpect(jsonPath("$.prices[1]", is("201. 00")))
+                .andExpect(jsonPath("$.prices[2]", is("13. 90")))
+                .andExpect(jsonPath("$.prices[3]", is("714. 90")));
     }
 }
