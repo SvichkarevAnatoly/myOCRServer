@@ -101,7 +101,7 @@ public class ReceiptItemControllerTest {
         pizza = receiptItemRepository.save(new ReceiptItem("Pizza"));
         spbAuchanPizza = cityShopReceiptItemRepository.save(new CityShopReceiptItem(pizza, spbAuchan));
 
-        pizzaPrice = priceRepository.save(new Price("15.00", pizzaDate, spbAuchanPizza));
+        pizzaPrice = priceRepository.save(new Price(1500, pizzaDate, spbAuchanPizza));
     }
 
     @Test
@@ -113,6 +113,6 @@ public class ReceiptItemControllerTest {
 
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].item", is("Pizza")))
-                .andExpect(jsonPath("$[0].price", is("15.00")));
+                .andExpect(jsonPath("$[0].price", is(1500)));
     }
 }

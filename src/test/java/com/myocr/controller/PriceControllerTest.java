@@ -125,8 +125,8 @@ public class PriceControllerTest {
     @Test
     public void save() throws Exception {
         final Date now = Calendar.getInstance().getTime();
-        final Price pizzaPrice = new Price("15.00", now, spbAuchanPizza);
-        final Price pastaPrice = new Price("10.00", now, spbAuchanPasta);
+        final Price pizzaPrice = new Price(1500, now, spbAuchanPizza);
+        final Price pastaPrice = new Price(1000, now, spbAuchanPasta);
 
         final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
         final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
@@ -172,7 +172,7 @@ public class PriceControllerTest {
     public void saveNotExistingReceiptItem() throws Exception {
         final Date now = new Date();
         final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
-                new SavePriceRequest.ReceiptPriceItem("chicken", "30.00"));
+                new SavePriceRequest.ReceiptPriceItem("chicken", 3000));
 
         final String savedPriceJson = json(
                 new SavePriceRequest(spb.getName(), auchan.getName(), items));
@@ -188,7 +188,7 @@ public class PriceControllerTest {
                 .andExpect(content().contentType(contentType))
 
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].value", is("30.00")))
+                .andExpect(jsonPath("$[0].value", is(3000)))
                 .andExpect(jsonPath("$[0].time", greaterThan(now.getTime())))
                 .andExpect(jsonPath("$[0].cityShopReceiptItem.receiptItem.name", is("chicken")));
 
@@ -201,7 +201,7 @@ public class PriceControllerTest {
         final String timeString = "31-08-1982 10:20:56";
 
         final Date time = TimeUtil.parse(timeString);
-        final Price pizzaPrice = new Price("15.00", time, spbAuchanPizza);
+        final Price pizzaPrice = new Price(1500, time, spbAuchanPizza);
 
         final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
         final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(

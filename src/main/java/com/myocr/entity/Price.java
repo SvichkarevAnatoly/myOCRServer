@@ -13,7 +13,7 @@ public class Price {
     @GeneratedValue
     private long id;
 
-    private String value;
+    private int value;
     private Date time;
 
     @ManyToOne
@@ -23,7 +23,7 @@ public class Price {
     public Price() {
     }
 
-    public Price(String value, Date time, CityShopReceiptItem cityShopReceiptItem) {
+    public Price(int value, Date time, CityShopReceiptItem cityShopReceiptItem) {
         this.value = value;
         this.time = time;
         this.cityShopReceiptItem = cityShopReceiptItem;
@@ -37,11 +37,11 @@ public class Price {
         this.id = id;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 

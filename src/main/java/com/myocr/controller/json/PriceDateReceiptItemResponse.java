@@ -2,10 +2,10 @@ package com.myocr.controller.json;
 
 public class PriceDateReceiptItemResponse {
     private String item;
-    private String price;
+    private int price;
     private String date;
 
-    public PriceDateReceiptItemResponse(String item, String price, String date) {
+    public PriceDateReceiptItemResponse(String item, int price, String date) {
         this.item = item;
         this.price = price;
         this.date = date;
@@ -15,7 +15,7 @@ public class PriceDateReceiptItemResponse {
         return item;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 

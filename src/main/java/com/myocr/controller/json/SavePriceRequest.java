@@ -44,12 +44,12 @@ public class SavePriceRequest {
 
     public static class ReceiptPriceItem {
         private String name;
-        private String price;
+        private int price;
 
         public ReceiptPriceItem() {
         }
 
-        public ReceiptPriceItem(String name, String price) {
+        public ReceiptPriceItem(String name, int price) {
             this.name = name;
             this.price = price;
         }
@@ -62,7 +62,7 @@ public class SavePriceRequest {
             this.name = name;
         }
 
-        public String getPrice() {
+        public int getPrice() {
             return price;
         }
     }
