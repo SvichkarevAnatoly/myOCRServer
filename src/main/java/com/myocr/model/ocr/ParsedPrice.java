@@ -2,8 +2,7 @@ package com.myocr.model.ocr;
 
 public class ParsedPrice {
     private String stringValue;
-    private int intValue;
-    private boolean parsed;
+    private Integer intValue;
 
     public ParsedPrice(String stringValue) {
         this.stringValue = stringValue;
@@ -12,18 +11,13 @@ public class ParsedPrice {
     public ParsedPrice(String stringValue, int intValue) {
         this.stringValue = stringValue;
         this.intValue = intValue;
-        parsed = true;
     }
 
     public String getStringValue() {
         return stringValue;
     }
 
-    public int getIntValue() {
+    public Integer getIntValue() {
         return intValue;
-    }
-
-    public boolean isParsed() {
-        return parsed;
     }
 }

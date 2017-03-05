@@ -92,7 +92,6 @@ public class OcrControllerTest {
 
                 .andExpect(jsonPath("$.prices", hasSize(4)))
                 .andExpect(jsonPath("$.prices[0].stringValue", is("187.14")))
-                .andExpect(jsonPath("$.prices[0].intValue", is(18714)))
-                .andExpect(jsonPath("$.prices[0].parsed", is(true)));
+                .andExpect(jsonPath("$.prices[0].intValue", is(18714)));
     }
 }
