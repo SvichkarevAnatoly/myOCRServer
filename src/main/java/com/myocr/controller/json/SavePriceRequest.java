@@ -27,24 +27,12 @@ public class SavePriceRequest {
         return cityName;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
     public String getShopName() {
         return shopName;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
     public List<ReceiptPriceItem> getItems() {
         return items;
-    }
-
-    public void setItems(List<ReceiptPriceItem> items) {
-        this.items = items;
     }
 
     public static class ReceiptPriceItem {
@@ -69,10 +57,6 @@ public class SavePriceRequest {
 
         public String getPrice() {
             return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
         }
     }
 }
