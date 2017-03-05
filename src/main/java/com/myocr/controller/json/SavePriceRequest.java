@@ -6,20 +6,23 @@ import java.util.List;
 public class SavePriceRequest {
     private String cityName;
     private String shopName;
+    private String time;
 
     private List<ReceiptPriceItem> items = new ArrayList<>();
 
     public SavePriceRequest() {
     }
 
-    public SavePriceRequest(String cityName, String shopName) {
-        this.cityName = cityName;
-        this.shopName = shopName;
-    }
-
     public SavePriceRequest(String cityName, String shopName, List<ReceiptPriceItem> items) {
         this.cityName = cityName;
         this.shopName = shopName;
+        this.items = items;
+    }
+
+    public SavePriceRequest(String cityName, String shopName, String time, List<ReceiptPriceItem> items) {
+        this.cityName = cityName;
+        this.shopName = shopName;
+        this.time = time;
         this.items = items;
     }
 
@@ -29,6 +32,10 @@ public class SavePriceRequest {
 
     public String getShopName() {
         return shopName;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public List<ReceiptPriceItem> getItems() {

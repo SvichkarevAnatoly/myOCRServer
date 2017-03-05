@@ -9,11 +9,14 @@ import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
+import com.myocr.util.TimeUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,17 +40,29 @@ public class PriceController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public Iterable<Price> save(@RequestBody SavePriceRequest request) {
-        final Date now = new Date();
+    public Iterable<Price> save(@RequestBody SavePriceRequest request) throws ParseException {
+        Date time = getRequestTime(request);
+
         final List<Price> prices = new ArrayList<>();
         for (SavePriceRequest.ReceiptPriceItem requestItem : request.getItems()) {
             final CityShopReceiptItem item = getCityShopReceiptItem(
                     requestItem.getName(), request.getCityName(), request.getShopName());
-            final Price price = new Price(requestItem.getPrice(), now, item);
+            final Price price = new Price(requestItem.getPrice(), time, item);
             prices.add(price);
         }
 
         return priceRepository.save(prices);
+    }
+
+    private Date getRequestTime(SavePriceRequest request) throws ParseException {
+        Date time;
+        String requestTime = request.getTime();
+        if (StringUtils.isEmpty(requestTime)) {
+            time = new Date();
+        } else {
+            time = TimeUtil.parse(requestTime);
+        }
+        return time;
     }
 
     private CityShopReceiptItem getCityShopReceiptItem(String receiptItem, String city, String shop) {
