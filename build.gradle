@@ -29,6 +29,10 @@ jar {
     version = '0.1.0'
 }
 
+bootRepackage {
+    mainClass = 'com.myocr.Application'
+}
+
 repositories {
     mavenCentral()
 }
