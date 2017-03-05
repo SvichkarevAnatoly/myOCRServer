@@ -10,7 +10,7 @@ import java.util.List;
 public class TessdataUtil {
     private static final String TESSFOLDER = "tessdata";
     private static final String TESSDATA_EXTENTION = ".traineddata";
-    private static final String JAR_ROOT = "/";
+    private static final String JAR_ROOT = "/BOOT-INF/classes/";
 
     private static final List<String> langs = Arrays.asList("eng", "rus");
 
@@ -26,7 +26,7 @@ public class TessdataUtil {
         }
     }
 
-    public static void extractFile(String resoursePath, String outPath) throws IOException {
+    private static void extractFile(String resoursePath, String outPath) throws IOException {
         File file = new File(outPath);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
