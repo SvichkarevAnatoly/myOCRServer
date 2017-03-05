@@ -81,7 +81,14 @@ public class OcrControllerTest {
                 .andExpect(content().contentType(contentType))
 
                 .andExpect(jsonPath("$.itemMatches", hasSize(4)))
-
+                .andExpect(jsonPath("$.itemMatches[0].source",
+                        is("№№ Б/К0ЖИ КЧРИН0Е 0ХЛ. НА П0187. 14“ 187. И")))
+                .andExpect(jsonPath("$.itemMatches[1].source",
+                        is("№№ Б/К0ЖИ КЧРИНОЕ 0ХЛ. НА П0201. 00*1 201. 00")))
+                .andExpect(jsonPath("$.itemMatches[2].source",
+                        is("ИЗД—ИЕ МАКАР0Н. СЕРПАНТИН Г РЧПП1З. 90*1 13. 90")))
+                .andExpect(jsonPath("$.itemMatches[3].source",
+                        is("ХЛЕБ_ДАРНИШ<ИИ НАРЕЗКА ЗБ0Г 14. 90*1 14. 90")))
 
                 .andExpect(jsonPath("$.prices", hasSize(4)))
                 .andExpect(jsonPath("$.prices[0]", is("187.14")))
