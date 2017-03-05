@@ -111,11 +111,14 @@ public class FinderControllerTest {
                 .andExpect(content().contentType(contentType))
 
                 .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].source", is("item1")))
                 .andExpect(jsonPath("$[0].matches", hasSize(3)))
                 .andExpect(jsonPath("$[0].matches[0].match", is("item1")))
                 .andExpect(jsonPath("$[0].matches[0].score", is(5)))
                 .andExpect(jsonPath("$[0].matches[1].score", is(3)))
                 .andExpect(jsonPath("$[0].matches[2].score", is(3)))
+
+                .andExpect(jsonPath("$[1].source", is("item2")))
                 .andExpect(jsonPath("$[1].matches", hasSize(3)))
                 .andExpect(jsonPath("$[1].matches[0].match", is("item2")))
                 .andExpect(jsonPath("$[1].matches[0].score", is(5)))

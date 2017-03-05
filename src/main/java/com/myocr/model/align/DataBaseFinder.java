@@ -52,7 +52,7 @@ public class DataBaseFinder {
         final List<ReceiptItemMatches> receiptItemMatches = new ArrayList<>(ocrReceiptItems.size());
         for (String ocrReceiptItem : ocrReceiptItems) {
             final List<Match> matches = find(ocrReceiptItem);
-            receiptItemMatches.add(new ReceiptItemMatches(matches));
+            receiptItemMatches.add(new ReceiptItemMatches(ocrReceiptItem, matches));
         }
         return receiptItemMatches;
     }
