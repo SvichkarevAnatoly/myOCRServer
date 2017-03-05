@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/shops")
@@ -19,7 +20,9 @@ public class ShopController {
     }
 
     @RequestMapping(value = "/inCity/{cityName}", method = RequestMethod.GET)
-    Collection<Shop> findShopsByCityName(@PathVariable String cityName) {
-        return shopRepository.findByCityShopsCityName(cityName);
+    Collection<String> findShopsByCityName(@PathVariable String cityName) {
+        return shopRepository.findByCityShopsCityName(cityName)
+                .stream().map(Shop::getName)
+                .collect(Collectors.toList());
     }
 }
