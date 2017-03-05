@@ -1,5 +1,6 @@
 package com.myocr.controller;
 
+import com.myocr.controller.json.OcrReceiptResponse;
 import com.myocr.model.align.ReceiptItemMatches;
 import com.myocr.model.ocr.OcrUtil;
 import com.myocr.model.ocr.Tesseract;
@@ -32,7 +33,7 @@ public class OcrController {
     }
 
     @PostMapping("/image")
-    public List<ReceiptItemMatches> ocrImage(
+    public OcrReceiptResponse ocrImage(
             @RequestParam MultipartFile receiptItemsImage,
             @RequestParam MultipartFile pricesImage,
             @RequestParam String city, @RequestParam String shop) throws IOException {
@@ -47,7 +48,9 @@ public class OcrController {
         log.info(Arrays.toString(ocrPrices.toArray()));
 
         final ReceiptItemService service = new ReceiptItemService(receiptItemRepository);
-        return service.findReceipt(city, shop, ocrReceiptItems);
+        final List<ReceiptItemMatches> receiptItemMatches = service.findReceipt(city, shop, ocrReceiptItems);
+
+        return new OcrReceiptResponse(receiptItemMatches, ocrPrices);
     }
 
     private List<String> ocrReceiptItemsImage(MultipartFile image) throws IOException {
