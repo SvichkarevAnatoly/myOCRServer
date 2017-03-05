@@ -20,6 +20,8 @@ test {
     exclude '**/CityControllerTest.class'
     exclude '**/PriceControllerTest.class'
     exclude '**/ShopControllerTest.class'
+    exclude '**/OcrControllerTest.class'
+    exclude '**/CityShopReceiptItemRepositoryTest.class'
 }
 
 jar {
