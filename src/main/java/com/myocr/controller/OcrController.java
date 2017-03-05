@@ -3,6 +3,8 @@ package com.myocr.controller;
 import com.myocr.controller.json.OcrReceiptResponse;
 import com.myocr.model.align.ReceiptItemMatches;
 import com.myocr.model.ocr.OcrUtil;
+import com.myocr.model.ocr.ParsedPrice;
+import com.myocr.model.ocr.PriceParser;
 import com.myocr.model.ocr.Tesseract;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.service.ReceiptItemService;
@@ -44,13 +46,15 @@ public class OcrController {
         final List<String> ocrReceiptItems = ocrReceiptItemsImage(receiptItemsImage);
         log.info(Arrays.toString(ocrReceiptItems.toArray()));
 
-        final List<String> ocrPrices = ocrPricesImage(pricesImage);
-        log.info(Arrays.toString(ocrPrices.toArray()));
-
         final ReceiptItemService service = new ReceiptItemService(receiptItemRepository);
         final List<ReceiptItemMatches> receiptItemMatches = service.findReceipt(city, shop, ocrReceiptItems);
 
-        return new OcrReceiptResponse(receiptItemMatches, ocrPrices);
+        final List<String> ocrPrices = ocrPricesImage(pricesImage);
+        log.info(Arrays.toString(ocrPrices.toArray()));
+
+        List<ParsedPrice> parsedPrices = PriceParser.parse(ocrPrices);
+
+        return new OcrReceiptResponse(receiptItemMatches, parsedPrices);
     }
 
     private List<String> ocrReceiptItemsImage(MultipartFile image) throws IOException {
