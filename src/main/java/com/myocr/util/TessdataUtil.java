@@ -1,11 +1,11 @@
 package com.myocr.util;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class TessdataUtil {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             InputStream inputStream = new ClassPathResource(resourcePath).getInputStream();
-            Files.copy(inputStream, file.getAbsoluteFile().toPath());
+            FileUtils.copyInputStreamToFile(inputStream, file);
         }
     }
 }

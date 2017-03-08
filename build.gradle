@@ -49,6 +49,7 @@ dependencies {
     testCompile('com.jayway.jsonpath:json-path')
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile group: 'org.unitils', name: 'unitils-core', version: '3.4.6'
 
     compile group: 'org.bytedeco.javacpp-presets', name: 'tesseract', version: '3.04-1.1'
