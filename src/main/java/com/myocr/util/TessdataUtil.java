@@ -12,7 +12,6 @@ import java.util.List;
 public class TessdataUtil {
     private static final String TESSFOLDER = "tessdata";
     private static final String TESSDATA_EXTENTION = ".traineddata";
-    private static final String JAR_ROOT = "/";
 
     private static final List<String> langs = Arrays.asList("eng", "rus");
 
@@ -21,15 +20,15 @@ public class TessdataUtil {
             final String fileName = lang + TESSDATA_EXTENTION;
             final String filePath = TESSFOLDER + File.separator + fileName;
             try {
-                extractFile(filePath, filePath);
+                extractFile(filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private static void extractFile(String resourcePath, String outPath) throws IOException {
-        File file = new File(outPath);
+    private static void extractFile(String resourcePath) throws IOException {
+        File file = new File(resourcePath);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             InputStream inputStream = new ClassPathResource(resourcePath).getInputStream();
