@@ -38,8 +38,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -142,35 +140,11 @@ public class PriceControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-
-                .andExpect(jsonPath("$", hasSize(2)))
-
-                // pizza
-                .andExpect(jsonPath("$[0].value", is(pizzaPrice.getValue())))
-                .andExpect(jsonPath("$[0].time",
-                        greaterThan(pizzaPrice.getTime().getTime())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.receiptItem.name",
-                        is(pizzaPrice.getCityShopReceiptItem().getReceiptItem().getName())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.cityShop.city.name",
-                        is(pizzaPrice.getCityShopReceiptItem().getCityShop().getCity().getName())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.cityShop.shop.name",
-                        is(pizzaPrice.getCityShopReceiptItem().getCityShop().getShop().getName())))
-
-                // pasta
-                .andExpect(jsonPath("$[1].value", is(pastaPrice.getValue())))
-                .andExpect(jsonPath("$[1].time",
-                        greaterThan(pastaPrice.getTime().getTime())))
-                .andExpect(jsonPath("$[1].cityShopReceiptItem.receiptItem.name",
-                        is(pastaPrice.getCityShopReceiptItem().getReceiptItem().getName())))
-                .andExpect(jsonPath("$[1].cityShopReceiptItem.cityShop.city.name",
-                        is(pastaPrice.getCityShopReceiptItem().getCityShop().getCity().getName())))
-                .andExpect(jsonPath("$[1].cityShopReceiptItem.cityShop.shop.name",
-                        is(pastaPrice.getCityShopReceiptItem().getCityShop().getShop().getName())));
+                .andExpect(jsonPath("$", is(2)));
     }
 
     @Test
     public void saveNotExistingReceiptItem() throws Exception {
-        final Date now = new Date();
         final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
                 new SavePriceRequest.ReceiptPriceItem("chicken", 3000));
 
@@ -186,11 +160,7 @@ public class PriceControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].value", is(3000)))
-                .andExpect(jsonPath("$[0].time", greaterThan(now.getTime())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.receiptItem.name", is("chicken")));
+                .andExpect(jsonPath("$", is(1)));
 
         assertThat(receiptItemRepository.count(), is(3L));
         assertThat(cityShopReceiptItemRepository.count(), is(3L));
@@ -216,19 +186,7 @@ public class PriceControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-
-                .andExpect(jsonPath("$", hasSize(1)))
-
-                // pizza
-                .andExpect(jsonPath("$[0].value", is(pizzaPrice.getValue())))
-                .andExpect(jsonPath("$[0].time",
-                        is(TimeUtil.parse(timeString).getTime())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.receiptItem.name",
-                        is(pizzaPrice.getCityShopReceiptItem().getReceiptItem().getName())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.cityShop.city.name",
-                        is(pizzaPrice.getCityShopReceiptItem().getCityShop().getCity().getName())))
-                .andExpect(jsonPath("$[0].cityShopReceiptItem.cityShop.shop.name",
-                        is(pizzaPrice.getCityShopReceiptItem().getCityShop().getShop().getName())));
+                .andExpect(jsonPath("$", is(1)));
     }
 
     private String json(Object o) throws IOException {

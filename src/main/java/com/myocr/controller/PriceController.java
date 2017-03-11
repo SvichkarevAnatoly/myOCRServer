@@ -40,7 +40,7 @@ public class PriceController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public Iterable<Price> save(@RequestBody SavePriceRequest request) throws ParseException {
+    public int save(@RequestBody SavePriceRequest request) throws ParseException {
         Date time = getRequestTime(request);
 
         final List<Price> prices = new ArrayList<>();
@@ -51,7 +51,8 @@ public class PriceController {
             prices.add(price);
         }
 
-        return priceRepository.save(prices);
+        priceRepository.save(prices);
+        return prices.size();
     }
 
     private Date getRequestTime(SavePriceRequest request) throws ParseException {
