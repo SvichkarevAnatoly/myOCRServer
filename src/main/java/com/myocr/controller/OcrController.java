@@ -21,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -43,6 +45,9 @@ public class OcrController {
 
         log.info(receiptItemsImage.getOriginalFilename());
         log.info(pricesImage.getOriginalFilename());
+
+        save(receiptItemsImage);
+        save(pricesImage);
 
         final List<String> ocrReceiptItems = ocrReceiptItemsImage(receiptItemsImage);
         log.info(Arrays.toString(ocrReceiptItems.toArray()));
@@ -82,9 +87,14 @@ public class OcrController {
     }
 
     private File save(MultipartFile file) throws IOException {
-        final File dest = new File(file.getOriginalFilename());
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss_yyyy-mm-dd");
+        final Date serverTime = new Date();
+        final String timeSuffix = String.format("%s.png", dateFormat.format(serverTime));
+        final String filePath = "receivedImages/" + file.getOriginalFilename() + "_" + timeSuffix;
+
+        final File dest = new File(filePath);
         dest.createNewFile();
-        FileOutputStream fos = new FileOutputStream(dest);
+        final FileOutputStream fos = new FileOutputStream(dest);
         fos.write(file.getBytes());
         fos.close();
         return dest;
