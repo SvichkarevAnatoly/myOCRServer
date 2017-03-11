@@ -11,6 +11,7 @@ import com.myocr.service.ReceiptItemService;
 import org.bytedeco.javacpp.lept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,11 +35,11 @@ public class OcrController {
         this.receiptItemRepository = receiptItemRepository;
     }
 
-    @PostMapping("/image")
+    @PostMapping("/{city}/{shop}")
     public OcrReceiptResponse ocrImage(
             @RequestParam MultipartFile receiptItemsImage,
             @RequestParam MultipartFile pricesImage,
-            @RequestParam String city, @RequestParam String shop) throws IOException {
+            @PathVariable String city, @PathVariable String shop) throws IOException {
 
         log.info(receiptItemsImage.getOriginalFilename());
         log.info(pricesImage.getOriginalFilename());

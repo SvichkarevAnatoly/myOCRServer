@@ -73,7 +73,7 @@ public class OcrControllerTest {
         final MockMultipartFile pricesImage = new MockMultipartFile(
                 "pricesImage", "prices.jpg", null, pricesImageContent);
 
-        mockMvc.perform(fileUpload("/ocr/image?city=Sbp&shop=Auchan")
+        mockMvc.perform(fileUpload("/ocr/Sbp/Auchan")
                 .file(receiptItemsImage)
                 .file(pricesImage))
                 .andDo(print())
