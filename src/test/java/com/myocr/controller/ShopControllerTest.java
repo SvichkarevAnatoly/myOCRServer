@@ -5,7 +5,9 @@ import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
+import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.ShopRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +23,12 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -54,6 +58,9 @@ public class ShopControllerTest {
     private ShopRepository shopRepository;
 
     @Autowired
+    private CityShopRepository cityShopRepository;
+
+    @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Before
@@ -77,6 +84,13 @@ public class ShopControllerTest {
         shopRepository.save(Arrays.asList(auchan, prisma, karusel, megas));
     }
 
+    @After
+    public void tearDown() throws Exception {
+        cityShopRepository.deleteAll();
+        cityRepository.deleteAll();
+        shopRepository.deleteAll();
+    }
+
     @Test
     public void findShops() throws Exception {
         final Iterable<Shop> responseShops = shopRepository.findAll();
@@ -95,8 +109,13 @@ public class ShopControllerTest {
 
     @Test
     public void addNewShop() throws Exception {
+        final Collection<Shop> beforeShopsInSpb = shopRepository.findByCityShopsCityName("Spb");
+
         mockMvc.perform(post("/shops/add/Spb/Dixy"))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        final Collection<Shop> afterShopsInSpb = shopRepository.findByCityShopsCityName("Spb");
+        assertThat(afterShopsInSpb.size() - beforeShopsInSpb.size(), is(1));
     }
 }
