@@ -93,6 +93,7 @@ public class OcrController {
         final String filePath = "receivedImages/" + timePrefix + file.getOriginalFilename();
 
         final File dest = new File(filePath);
+        dest.getParentFile().mkdirs();
         dest.createNewFile();
         final FileOutputStream fos = new FileOutputStream(dest);
         fos.write(file.getBytes());
