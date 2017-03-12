@@ -26,6 +26,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -93,5 +94,12 @@ public class ShopControllerTest {
                 .andExpect(jsonPath("$[1].name", is(shops.get(1).getName())))
                 .andExpect(jsonPath("$[2].id", is(shops.get(2).getId().intValue())))
                 .andExpect(jsonPath("$[2].name", is(shops.get(2).getName())));
+    }
+
+    @Test
+    public void addNewShop() throws Exception {
+        mockMvc.perform(post("/shops/add/Spb/Dixy"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
