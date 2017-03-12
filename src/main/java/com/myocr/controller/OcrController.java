@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ocr")
 public class OcrController {
-    final static Logger log = LoggerFactory.getLogger(OcrController.class);
+    private final static Logger log = LoggerFactory.getLogger(OcrController.class);
 
     private final ReceiptItemRepository receiptItemRepository;
 
