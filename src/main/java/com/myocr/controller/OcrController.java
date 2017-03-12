@@ -87,10 +87,10 @@ public class OcrController {
     }
 
     private File save(MultipartFile file) throws IOException {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss_yyyy-mm-dd");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd_hh:mm:ss_");
         final Date serverTime = new Date();
-        final String timeSuffix = String.format("%s.png", dateFormat.format(serverTime));
-        final String filePath = "receivedImages/" + file.getOriginalFilename() + "_" + timeSuffix;
+        final String timePrefix = String.format("%s.png", dateFormat.format(serverTime));
+        final String filePath = "receivedImages/" + timePrefix + file.getOriginalFilename();
 
         final File dest = new File(filePath);
         dest.createNewFile();
