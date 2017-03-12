@@ -57,7 +57,6 @@ public class ShopController {
         final Shop savedShop = shopRepository.save(new Shop(shop));
         final City savedCity = cityRepository.findByName(city);
         final CityShop cityShop = new CityShop(savedCity, savedShop);
-        // CityShop.link(savedCity, savedShop);
         cityShopRepository.save(cityShop);
     }
 }

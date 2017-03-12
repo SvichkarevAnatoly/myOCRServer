@@ -88,12 +88,9 @@ public class ShopControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id", is(shops.get(0).getId().intValue())))
-                .andExpect(jsonPath("$[0].name", is(shops.get(0).getName())))
-                .andExpect(jsonPath("$[1].id", is(shops.get(1).getId().intValue())))
-                .andExpect(jsonPath("$[1].name", is(shops.get(1).getName())))
-                .andExpect(jsonPath("$[2].id", is(shops.get(2).getId().intValue())))
-                .andExpect(jsonPath("$[2].name", is(shops.get(2).getName())));
+                .andExpect(jsonPath("$[0]", is(shops.get(0).getName())))
+                .andExpect(jsonPath("$[1]", is(shops.get(1).getName())))
+                .andExpect(jsonPath("$[2]", is(shops.get(2).getName())));
     }
 
     @Test
