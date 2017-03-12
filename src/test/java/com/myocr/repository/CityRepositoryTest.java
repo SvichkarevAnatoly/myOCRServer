@@ -18,6 +18,8 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -50,5 +52,15 @@ public class CityRepositoryTest {
         }
 
         assertThat(repositoryCityNames, containsInAnyOrder(cityNames.toArray()));
+    }
+
+    @Test
+    public void findByName() throws Exception {
+        final String cityName = "Spb";
+        final City spb = cityRepository.findByName(cityName);
+
+        assertThat(spb, is(notNullValue()));
+        assertThat(spb.getName(), is(cityName));
+        assertThat(spb.getId(), is(1L));
     }
 }
