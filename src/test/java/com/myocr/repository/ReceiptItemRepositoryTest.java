@@ -1,11 +1,13 @@
 package com.myocr.repository;
 
 import com.myocr.Application;
+import com.myocr.RepositoryUtil;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.ReceiptItem;
 import com.myocr.entity.Shop;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,16 @@ public class ReceiptItemRepositoryTest {
 
     @Autowired
     private ReceiptItemRepository receiptItemRepository;
+
+    @After
+    public void tearDown() throws Exception {
+        RepositoryUtil.deleteAll(
+                cityShopReceiptItemRepository,
+                receiptItemRepository,
+                cityShopRepository,
+                cityRepository,
+                shopRepository);
+    }
 
     @Test
     public void findByNameAndCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName() throws Exception {

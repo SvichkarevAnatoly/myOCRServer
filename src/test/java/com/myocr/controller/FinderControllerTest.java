@@ -1,6 +1,7 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
+import com.myocr.RepositoryUtil;
 import com.myocr.controller.json.ReceiptRequest;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
@@ -9,8 +10,10 @@ import com.myocr.entity.ReceiptItem;
 import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.CityShopReceiptItemRepository;
+import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.repository.ShopRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +67,9 @@ public class FinderControllerTest {
     private ShopRepository shopRepository;
 
     @Autowired
+    private CityShopRepository cityShopRepository;
+
+    @Autowired
     private CityShopReceiptItemRepository cityShopReceiptItemRepository;
 
     @Autowired
@@ -96,6 +102,17 @@ public class FinderControllerTest {
         for (ReceiptItem savedItem : savedItems) {
             cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan));
         }
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        RepositoryUtil.deleteAll(
+                cityShopReceiptItemRepository,
+                receiptItemRepository,
+                cityShopRepository,
+                cityRepository,
+                shopRepository
+        );
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
+import com.myocr.RepositoryUtil;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.Shop;
@@ -86,9 +87,7 @@ public class ShopControllerTest {
 
     @After
     public void tearDown() throws Exception {
-        cityShopRepository.deleteAll();
-        cityRepository.deleteAll();
-        shopRepository.deleteAll();
+        RepositoryUtil.deleteAll(cityShopRepository, cityRepository, shopRepository);
     }
 
     @Test

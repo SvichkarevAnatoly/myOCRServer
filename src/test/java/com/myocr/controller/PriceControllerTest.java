@@ -1,6 +1,7 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
+import com.myocr.RepositoryUtil;
 import com.myocr.controller.json.SavePriceRequest;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
@@ -11,9 +12,11 @@ import com.myocr.entity.Shop;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
+import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.repository.ShopRepository;
 import com.myocr.util.TimeUtil;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,6 +79,9 @@ public class PriceControllerTest {
     private ReceiptItemRepository receiptItemRepository;
 
     @Autowired
+    private PriceRepository priceRepository;
+
+    @Autowired
     private WebApplicationContext webApplicationContext;
 
     private City spb;
@@ -118,6 +124,18 @@ public class PriceControllerTest {
 
         pasta = receiptItemRepository.save(new ReceiptItem("Pasta"));
         spbAuchanPasta = cityShopReceiptItemRepository.save(new CityShopReceiptItem(pasta, spbAuchan));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        RepositoryUtil.deleteAll(
+                priceRepository,
+                cityShopReceiptItemRepository,
+                receiptItemRepository,
+                cityShopRepository,
+                cityRepository,
+                shopRepository
+        );
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.myocr.controller;
 import com.myocr.Application;
 import com.myocr.entity.City;
 import com.myocr.repository.CityRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,11 @@ public class CityControllerTest {
 
         cityRepository.save(new City(cityNames.get(0)));
         cityRepository.save(new City(cityNames.get(1)));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        cityRepository.deleteAll();
     }
 
     @Test

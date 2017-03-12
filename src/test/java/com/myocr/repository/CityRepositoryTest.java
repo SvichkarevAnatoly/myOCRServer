@@ -2,6 +2,7 @@ package com.myocr.repository;
 
 import com.myocr.Application;
 import com.myocr.entity.City;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,11 +36,14 @@ public class CityRepositoryTest {
 
     @Before
     public void setup() throws Exception {
-        // cityRepository.deleteAll();
-
         final List<City> cities = IntStream.range(0, cityNames.size())
                 .mapToObj(i -> new City(cityNames.get(i))).collect(toList());
         cityRepository.save(cities);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        cityRepository.deleteAll();
     }
 
     @Test
@@ -61,6 +65,5 @@ public class CityRepositoryTest {
 
         assertThat(spb, is(notNullValue()));
         assertThat(spb.getName(), is(cityName));
-        assertThat(spb.getId(), is(1L));
     }
 }
