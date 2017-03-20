@@ -11,11 +11,7 @@ import com.myocr.service.ReceiptItemService;
 import org.bytedeco.javacpp.lept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -45,7 +41,7 @@ public class OcrController {
 
         log.info(receiptItemsImage.getOriginalFilename());
         log.info(pricesImage.getOriginalFilename());
-
+        
         save(receiptItemsImage);
         save(pricesImage);
 
@@ -64,7 +60,8 @@ public class OcrController {
     }
 
     private List<String> ocrReceiptItemsImage(MultipartFile image) throws IOException {
-        final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
+        final String filePath = "receivedImages/" + image.getOriginalFilename();
+        final lept.PIX pix = lept.pixRead(filePath);
         final Tesseract tesseract = new Tesseract("rus");
 
         final String ocrText = tesseract.ocr(pix);
@@ -75,7 +72,8 @@ public class OcrController {
     }
 
     private List<String> ocrPricesImage(MultipartFile image) throws IOException {
-        final lept.PIX pix = lept.pixReadMem(image.getBytes(), image.getSize());
+        final String filePath = "receivedImages/" + image.getOriginalFilename();
+        final lept.PIX pix = lept.pixRead(filePath);
         final Tesseract tesseract = new Tesseract("rus");
         tesseract.setCharWhitelist("0123456789.");
 
@@ -90,7 +88,7 @@ public class OcrController {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd_hh:mm:ss_");
         final Date serverTime = new Date();
         final String timePrefix = dateFormat.format(serverTime);
-        final String filePath = "receivedImages/" + timePrefix + file.getOriginalFilename();
+        final String filePath = "receivedImages/" + file.getOriginalFilename();
 
         final File dest = new File(filePath);
         dest.getParentFile().mkdirs();
