@@ -124,7 +124,7 @@ public class ReceiptItemControllerTest {
 
     @Test
     public void findReceiptItems() throws Exception {
-        mockMvc.perform(get("/receiptItems?city=Spb&shop=Auchan"))
+        mockMvc.perform(get("/receiptItems/Spb/Auchan"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
