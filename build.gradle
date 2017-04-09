@@ -6,14 +6,11 @@ buildscript {
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE'
         classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
-        classpath 'org.akhikhl.gretty:gretty:+'
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'war'
 apply plugin: 'idea'
-apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: 'org.springframework.boot'
 
@@ -46,9 +43,6 @@ test {
 }
 
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-    providedCompile 'com.google.appengine:appengine:+'
-
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -70,14 +64,6 @@ dependencies {
     compile("org.bytedeco.javacpp-presets:leptonica:1.72-1.1:linux-x86_64")
 }
 
-// [START gretty]
-gretty {
-    httpPort = 8080
-    contextPath = '/'
-    servletContainer = 'jetty9'  // What App Engine Flexible uses
-}
-// [END gretty]
-
 // [START model]
 appengine {
 
@@ -88,3 +74,7 @@ appengine {
 
 }
 // [END model]
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
