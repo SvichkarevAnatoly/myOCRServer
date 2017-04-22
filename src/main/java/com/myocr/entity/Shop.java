@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class City {
+public class Shop {
     @Id
     @GeneratedValue
     private long id;
@@ -19,14 +19,14 @@ public class City {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     private List<CityShop> cityShops = new ArrayList<>();
 
-    public City(String name) {
+    public Shop(String name) {
         this.name = name;
     }
 
-    City() {
+    Shop() {
     } // jpa only
 
     public Long getId() {
@@ -52,13 +52,13 @@ public class City {
     /*@Override
     public String toString() {
         String result = String.format(
-                "City [id=%d, name='%s']%n",
+                "Shop [id=%d, name='%s']%n",
                 id, name);
-        if (shops != null) {
-            for (Shop shop : shops) {
+        if (cities != null) {
+            for (City city : cities) {
                 result += String.format(
-                        "Shop[id=%d, name='%s']%n",
-                        shop.getId(), shop.getName());
+                        "City [id=%d, name='%s']%n",
+                        city.getId(), city.getName());
             }
         }
 
