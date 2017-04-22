@@ -64,17 +64,6 @@ dependencies {
     compile("org.bytedeco.javacpp-presets:leptonica:1.72-1.1:linux-x86_64")
 }
 
-// [START model]
-appengine {
-
-    deploy {   // deploy configuration
-        stopPreviousVersion = true  // default - stop the current version
-        promote = true              // default - & make this the current version
-    }
-
-}
-// [END model]
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
