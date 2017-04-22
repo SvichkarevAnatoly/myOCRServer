@@ -1,14 +1,8 @@
 package com.myocr.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class City {
@@ -17,10 +11,6 @@ public class City {
     private long id;
 
     private String name;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private List<CityShop> cityShops = new ArrayList<>();
 
     public City(String name) {
         this.name = name;
@@ -36,32 +26,4 @@ public class City {
     public String getName() {
         return name;
     }
-
-    public List<CityShop> getCityShops() {
-        return cityShops;
-    }
-
-    public void setCityShops(List<CityShop> cityShops) {
-        this.cityShops = cityShops;
-    }
-
-    public void addCityShop(CityShop cityShop) {
-        cityShops.add(cityShop);
-    }
-
-    /*@Override
-    public String toString() {
-        String result = String.format(
-                "City [id=%d, name='%s']%n",
-                id, name);
-        if (shops != null) {
-            for (Shop shop : shops) {
-                result += String.format(
-                        "Shop[id=%d, name='%s']%n",
-                        shop.getId(), shop.getName());
-            }
-        }
-
-        return result;
-    }*/
 }
