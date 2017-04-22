@@ -1,6 +1,5 @@
 package com.myocr;
 
-import com.myocr.util.TessdataUtil;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +16,6 @@ public class Application implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... strings) throws Exception {
-        TessdataUtil.extractTessdata();
+        // TessdataUtil.extractTessdata();
     }
 }

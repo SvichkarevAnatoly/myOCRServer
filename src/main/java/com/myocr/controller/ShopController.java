@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/shops")
 public class ShopController {
-    private final static Logger log = LoggerFactory.getLogger(OcrController.class);
+    private final static Logger log = LoggerFactory.getLogger(ShopController.class);
 
     private final ShopRepository shopRepository;
     private final CityRepository cityRepository;
