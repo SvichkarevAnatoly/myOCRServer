@@ -7,4 +7,6 @@ import java.util.Collection;
 
 public interface PriceRepository extends CrudRepository<Price, Long> {
     Collection<Price> findByCityShopReceiptItemId(Long cityShopReceiptItemId);
+
+    Collection<Price> findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(String receiptItemSubstring, String city);
 }
