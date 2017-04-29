@@ -34,12 +34,20 @@ public class FinderController {
     }
 
     @GetMapping("/pricesInCity")
-    List<PriceDateReceiptItemResponse> findReceiptItemsLikeInCity(
+    List<PriceDateReceiptItemResponse> findReceiptItemsLikeInCityAndShop(
             @RequestParam("q") String receiptItemSubstring,
-            @RequestParam String city) {
-        final Collection<Price> entities = priceRepository
-                .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
-                        receiptItemSubstring, city);
+            @RequestParam String city, @RequestParam(required = false) String shop) {
+        final Collection<Price> entities;
+        if (shop != null) {
+            entities = priceRepository
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(
+                            receiptItemSubstring, city, shop);
+        } else {
+            entities = priceRepository
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
+                            receiptItemSubstring, city);
+        }
+
         final List<PriceDateReceiptItemResponse> response = new ArrayList<>();
         for (Price entity : entities) {
             final String item = entity.getCityShopReceiptItem().getReceiptItem().getName();

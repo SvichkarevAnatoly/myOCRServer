@@ -9,4 +9,6 @@ public interface PriceRepository extends CrudRepository<Price, Long> {
     Collection<Price> findByCityShopReceiptItemId(Long cityShopReceiptItemId);
 
     Collection<Price> findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(String receiptItemSubstring, String city);
+
+    Collection<Price> findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(String receiptItemSubstring, String city, String shop);
 }
