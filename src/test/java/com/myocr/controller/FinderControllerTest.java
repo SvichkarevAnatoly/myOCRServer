@@ -98,9 +98,14 @@ public class FinderControllerTest {
         mockMvc = webAppContextSetup(webApplicationContext).build();
 
         final City spb = cityRepository.save(new City("Spb"));
+        final City nsk = cityRepository.save(new City("Nsk"));
+
         final Shop auchan = new Shop("Auchan");
         final CityShop spbAuchan = CityShop.link(spb, auchan);
         shopRepository.save(auchan);
+
+        final CityShop nskAuchan = CityShop.link(nsk, auchan);
+        cityShopRepository.save(nskAuchan);
 
         final Shop karusel = new Shop("Karusel");
         final CityShop spbKarusel = CityShop.link(spb, karusel);
@@ -112,10 +117,16 @@ public class FinderControllerTest {
 
         final List<CityShopReceiptItem> csItems = new ArrayList<>();
         for (ReceiptItem savedItem : savedItems) {
-            if (savedItem.getName().equals("item2")) {
-                csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbKarusel)));
-            } else {
-                csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan)));
+            switch (savedItem.getName()) {
+                case "item2":
+                    csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbKarusel)));
+                    break;
+                case "item3":
+                    csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, nskAuchan)));
+                    break;
+                default:
+                    csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan)));
+                    break;
             }
         }
 
@@ -156,18 +167,57 @@ public class FinderControllerTest {
         final Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         final Date nextDay = cal.getTime();
-        cal.add(Calendar.DATE, 1);
-        final Date nextNextDay = cal.getTime();
 
         mockMvc.perform(get("/find/prices?city=Spb&q=ite"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
 
+                .andExpect(jsonPath("$", hasSize(2)))
+
+                .andExpect(jsonPath("$[0].item", is("item2")))
+                .andExpect(jsonPath("$[0].price", is(200)))
+                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(nextDay))))
+
+                .andExpect(jsonPath("$[1].item", is("item1")))
+                .andExpect(jsonPath("$[1].price", is(100)))
+                .andExpect(jsonPath("$[1].date", is(TimeUtil.parse(today))));
+    }
+
+    @Test
+    public void findReceiptItemsLikeInCityAndShop() throws Exception {
+        final Calendar cal = Calendar.getInstance();
+        final Date today = cal.getTime();
+
+        mockMvc.perform(get("/find/prices?city=Spb&shop=Auchan&q=ite"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].item", is("item1")))
+                .andExpect(jsonPath("$[0].price", is(100)))
+                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(today))));
+    }
+
+    @Test
+    public void findReceiptItemsInCity() throws Exception {
+        final Calendar cal = Calendar.getInstance();
+        final Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        final Date nextDay = cal.getTime();
+        cal.add(Calendar.DATE, 2);
+        final Date next3Day = cal.getTime();
+
+        mockMvc.perform(get("/find/prices?city=Spb"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].item", is("item3")))
-                .andExpect(jsonPath("$[0].price", is(300)))
-                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(nextNextDay))))
+                .andExpect(jsonPath("$[0].item", is("i34534")))
+                .andExpect(jsonPath("$[0].price", is(400)))
+                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(next3Day))))
 
                 .andExpect(jsonPath("$[1].item", is("item2")))
                 .andExpect(jsonPath("$[1].price", is(200)))
@@ -176,27 +226,5 @@ public class FinderControllerTest {
                 .andExpect(jsonPath("$[2].item", is("item1")))
                 .andExpect(jsonPath("$[2].price", is(100)))
                 .andExpect(jsonPath("$[2].date", is(TimeUtil.parse(today))));
-    }
-
-    @Test
-    public void findReceiptItemsLikeInCityAndShop() throws Exception {
-        final Calendar cal = Calendar.getInstance();
-        final Date today = cal.getTime();
-        cal.add(Calendar.DATE, 2);
-        final Date nextNextDay = cal.getTime();
-
-        mockMvc.perform(get("/find/prices?city=Spb&shop=Auchan&q=ite"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].item", is("item3")))
-                .andExpect(jsonPath("$[0].price", is(300)))
-                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(nextNextDay))))
-
-                .andExpect(jsonPath("$[1].item", is("item1")))
-                .andExpect(jsonPath("$[1].price", is(100)))
-                .andExpect(jsonPath("$[1].date", is(TimeUtil.parse(today))));
     }
 }

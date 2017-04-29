@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,19 +33,11 @@ public class FinderController {
     }
 
     @GetMapping("/prices")
-    List<PriceDateReceiptItemResponse> findReceiptItemsLikeInCityAndShop(
-            @RequestParam String city, @RequestParam(required = false) String shop,
-            @RequestParam("q") String receiptItemSubstring) {
-        final Collection<Price> entities;
-        if (shop != null) {
-            entities = priceRepository
-                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(
-                            receiptItemSubstring, city, shop);
-        } else {
-            entities = priceRepository
-                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
-                            receiptItemSubstring, city);
-        }
+    List<PriceDateReceiptItemResponse> findReceiptItemsLike(
+            @RequestParam(value = "q", required = false) String receiptItemSubstring,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String shop) {
+        final Iterable<Price> entities = getEntities(receiptItemSubstring, city, shop);
 
         final List<PriceDateReceiptItemResponse> response = new ArrayList<>();
         for (Price entity : entities) {
@@ -57,5 +48,26 @@ public class FinderController {
             response.add(pdrir);
         }
         return response;
+    }
+
+    // get prices by query
+    private Iterable<Price> getEntities(String receiptItemSubstring, String city, String shop) {
+        if (city == null && shop == null && receiptItemSubstring == null) {
+            return priceRepository.findAll();
+        }
+
+        if (receiptItemSubstring == null) {
+            receiptItemSubstring = "";
+        }
+
+        if (shop != null) {
+            return priceRepository
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(
+                            receiptItemSubstring, city, shop);
+        } else {
+            return priceRepository
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
+                            receiptItemSubstring, city);
+        }
     }
 }
