@@ -8,6 +8,7 @@ import com.myocr.model.ocr.PriceParser;
 import com.myocr.model.ocr.Tesseract;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.service.ReceiptItemService;
+import com.myocr.util.TimeUtil;
 import org.bytedeco.javacpp.lept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -87,9 +87,8 @@ public class OcrController {
     }
 
     private File save(MultipartFile file) throws IOException {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd_hh:mm:ss_");
         final Date serverTime = new Date();
-        final String timePrefix = dateFormat.format(serverTime);
+        final String timePrefix = TimeUtil.getFileTimePrefix(serverTime);
         final String filePath = "receivedImages/" + timePrefix + file.getOriginalFilename();
 
         final File dest = new File(filePath);
