@@ -1,9 +1,20 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
-import com.myocr.controller.json.ReceiptRequest;
+import com.myocr.RepositoryUtil;
+import com.myocr.entity.City;
+import com.myocr.entity.CityShop;
+import com.myocr.entity.CityShopReceiptItem;
+import com.myocr.entity.Price;
 import com.myocr.entity.ReceiptItem;
+import com.myocr.entity.Shop;
+import com.myocr.repository.CityRepository;
+import com.myocr.repository.CityShopReceiptItemRepository;
+import com.myocr.repository.CityShopRepository;
+import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
+import com.myocr.repository.ShopRepository;
+import com.myocr.util.TimeUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,21 +24,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,7 +65,22 @@ public class FinderControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
+
+    @Autowired
+    private CityShopRepository cityShopRepository;
+
+    @Autowired
     private ReceiptItemRepository receiptItemRepository;
+
+    @Autowired
+    private CityShopReceiptItemRepository cityShopReceiptItemRepository;
+
+    @Autowired
+    private PriceRepository priceRepository;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -69,24 +97,43 @@ public class FinderControllerTest {
     public void setup() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
 
+        final City spb = cityRepository.save(new City("Spb"));
+        final Shop auchan = new Shop("Auchan");
+        final CityShop spbAuchan = CityShop.link(spb, auchan);
+        shopRepository.save(auchan);
+
         final List<String> itemNames = Arrays.asList("item1", "item2", "item3", "i34534");
         final List<ReceiptItem> items = itemNames.stream().map(ReceiptItem::new).collect(Collectors.toList());
-        receiptItemRepository.save(items);
+        final Iterable<ReceiptItem> savedItems = receiptItemRepository.save(items);
+
+        final List<CityShopReceiptItem> csItems = new ArrayList<>();
+        for (ReceiptItem savedItem : savedItems) {
+            csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan)));
+        }
+
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < csItems.size(); i++) {
+            final CityShopReceiptItem csItem = csItems.get(i);
+            priceRepository.save(new Price(100 * (i + 1), cal.getTime(), csItem));
+            cal.add(Calendar.DATE, 1);
+        }
     }
 
     @After
     public void tearDown() throws Exception {
-        receiptItemRepository.deleteAll();
+        RepositoryUtil.deleteAll(
+                priceRepository,
+                cityShopReceiptItemRepository,
+                receiptItemRepository,
+                cityShopRepository,
+                cityRepository,
+                shopRepository
+        );
     }
 
     @Test
-    public void findReceipt() throws Exception {
-        final List<String> items = Arrays.asList("item1", "item2");
-        final ReceiptRequest receiptRequest = new ReceiptRequest("Spb", "Auchan", items);
-        final String jsonRequestReceipt = json(receiptRequest);
-
-        mockMvc.perform(get("/find/receiptItems?q=ite")
-                .contentType(contentType).content(jsonRequestReceipt))
+    public void findReceiptItemsLike() throws Exception {
+        mockMvc.perform(get("/find/receiptItems?q=ite"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
@@ -95,9 +142,31 @@ public class FinderControllerTest {
                 .andExpect(jsonPath("$", containsInAnyOrder("item1", "item2", "item3")));
     }
 
-    private String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
+    @Test
+    public void findReceiptItemsLikeInCity() throws Exception {
+        final Calendar cal = Calendar.getInstance();
+        final Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        final Date nextDay = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        final Date nextNextDay = cal.getTime();
+
+        mockMvc.perform(get("/find/pricesInCity?city=Spb&q=ite"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].item", is("item3")))
+                .andExpect(jsonPath("$[0].price", is(300)))
+                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(nextNextDay))))
+
+                .andExpect(jsonPath("$[1].item", is("item2")))
+                .andExpect(jsonPath("$[1].price", is(200)))
+                .andExpect(jsonPath("$[1].date", is(TimeUtil.parse(nextDay))))
+
+                .andExpect(jsonPath("$[2].item", is("item1")))
+                .andExpect(jsonPath("$[2].price", is(100)))
+                .andExpect(jsonPath("$[2].date", is(TimeUtil.parse(today))));
     }
 }
