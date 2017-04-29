@@ -1,18 +1,9 @@
 package com.myocr.controller;
 
 import com.myocr.Application;
-import com.myocr.RepositoryUtil;
 import com.myocr.controller.json.ReceiptRequest;
-import com.myocr.entity.City;
-import com.myocr.entity.CityShop;
-import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.ReceiptItem;
-import com.myocr.entity.Shop;
-import com.myocr.repository.CityRepository;
-import com.myocr.repository.CityShopReceiptItemRepository;
-import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.ReceiptItemRepository;
-import com.myocr.repository.ShopRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,10 +26,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -61,18 +52,6 @@ public class FinderControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private CityRepository cityRepository;
-
-    @Autowired
-    private ShopRepository shopRepository;
-
-    @Autowired
-    private CityShopRepository cityShopRepository;
-
-    @Autowired
-    private CityShopReceiptItemRepository cityShopReceiptItemRepository;
-
-    @Autowired
     private ReceiptItemRepository receiptItemRepository;
 
     @Autowired
@@ -90,29 +69,14 @@ public class FinderControllerTest {
     public void setup() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
 
-        City spb = cityRepository.save(new City("Spb"));
-        Shop auchan = new Shop("Auchan");
-        final CityShop spbAuchan = CityShop.link(spb, auchan);
-        shopRepository.save(auchan);
-
         final List<String> itemNames = Arrays.asList("item1", "item2", "item3", "i34534");
         final List<ReceiptItem> items = itemNames.stream().map(ReceiptItem::new).collect(Collectors.toList());
-        final Iterable<ReceiptItem> savedItems = receiptItemRepository.save(items);
-
-        for (ReceiptItem savedItem : savedItems) {
-            cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan));
-        }
+        receiptItemRepository.save(items);
     }
 
     @After
     public void tearDown() throws Exception {
-        RepositoryUtil.deleteAll(
-                cityShopReceiptItemRepository,
-                receiptItemRepository,
-                cityShopRepository,
-                cityRepository,
-                shopRepository
-        );
+        receiptItemRepository.deleteAll();
     }
 
     @Test
@@ -121,26 +85,14 @@ public class FinderControllerTest {
         final ReceiptRequest receiptRequest = new ReceiptRequest("Spb", "Auchan", items);
         final String jsonRequestReceipt = json(receiptRequest);
 
-        mockMvc.perform(post("/find/receipt/")
+        mockMvc.perform(get("/find/receiptItems?q=ite")
                 .contentType(contentType).content(jsonRequestReceipt))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
 
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].source", is("item1")))
-                .andExpect(jsonPath("$[0].matches", hasSize(3)))
-                .andExpect(jsonPath("$[0].matches[0].match", is("item1")))
-                .andExpect(jsonPath("$[0].matches[0].score", is(5)))
-                .andExpect(jsonPath("$[0].matches[1].score", is(3)))
-                .andExpect(jsonPath("$[0].matches[2].score", is(3)))
-
-                .andExpect(jsonPath("$[1].source", is("item2")))
-                .andExpect(jsonPath("$[1].matches", hasSize(3)))
-                .andExpect(jsonPath("$[1].matches[0].match", is("item2")))
-                .andExpect(jsonPath("$[1].matches[0].score", is(5)))
-                .andExpect(jsonPath("$[0].matches[1].score", is(3)))
-                .andExpect(jsonPath("$[0].matches[2].score", is(3)));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$", containsInAnyOrder("item1", "item2", "item3")));
     }
 
     private String json(Object o) throws IOException {
