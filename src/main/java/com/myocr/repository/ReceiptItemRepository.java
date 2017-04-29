@@ -11,4 +11,6 @@ public interface ReceiptItemRepository extends CrudRepository<ReceiptItem, Long>
     ReceiptItem findByNameAndCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName(String receiptItemName, String cityName, String shopName);
 
     List<ReceiptItem> findByCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName(String cityName, String shopName);
+
+    List<ReceiptItem> findByNameIgnoreCaseContaining(String substring);
 }
