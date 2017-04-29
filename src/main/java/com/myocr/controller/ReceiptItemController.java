@@ -5,6 +5,7 @@ import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.Price;
 import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.PriceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,14 +19,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/receiptItems")
 public class ReceiptItemController {
-    private final CityShopReceiptItemRepository cityShopReceiptItemRepository;
-    private final PriceRepository priceRepository;
+    @Autowired
+    private CityShopReceiptItemRepository cityShopReceiptItemRepository;
 
-    public ReceiptItemController(CityShopReceiptItemRepository cityShopReceiptItemRepository,
-                                 PriceRepository priceRepository) {
-        this.cityShopReceiptItemRepository = cityShopReceiptItemRepository;
-        this.priceRepository = priceRepository;
-    }
+    @Autowired
+    private PriceRepository priceRepository;
 
     @GetMapping("/{city}/{shop}")
     List<PriceDateReceiptItemResponse> findReceiptItems(@PathVariable String city, @PathVariable String shop) {

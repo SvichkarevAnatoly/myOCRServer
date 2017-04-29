@@ -2,6 +2,7 @@ package com.myocr.controller;
 
 import com.myocr.entity.ReceiptItem;
 import com.myocr.repository.ReceiptItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,11 +15,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/find")
 public class FinderController {
 
-    private final ReceiptItemRepository receiptItemRepository;
-
-    public FinderController(ReceiptItemRepository receiptItemRepository) {
-        this.receiptItemRepository = receiptItemRepository;
-    }
+    @Autowired
+    private ReceiptItemRepository receiptItemRepository;
 
     @GetMapping("/receiptItems")
     public List<String> findReceiptItemLike(@RequestParam("q") String substring) {

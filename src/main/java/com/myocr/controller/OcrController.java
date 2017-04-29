@@ -12,6 +12,7 @@ import com.myocr.util.TimeUtil;
 import org.bytedeco.javacpp.lept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,11 +32,8 @@ import java.util.List;
 public class OcrController {
     private final static Logger log = LoggerFactory.getLogger(OcrController.class);
 
-    private final ReceiptItemRepository receiptItemRepository;
-
-    public OcrController(ReceiptItemRepository receiptItemRepository) {
-        this.receiptItemRepository = receiptItemRepository;
-    }
+    @Autowired
+    private ReceiptItemRepository receiptItemRepository;
 
     @PostMapping("/{city}/{shop}")
     public OcrReceiptResponse ocrImage(

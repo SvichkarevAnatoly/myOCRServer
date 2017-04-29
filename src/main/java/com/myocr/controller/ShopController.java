@@ -8,6 +8,7 @@ import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.ShopRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,18 +23,14 @@ import java.util.stream.Collectors;
 public class ShopController {
     private final static Logger log = LoggerFactory.getLogger(OcrController.class);
 
-    private final ShopRepository shopRepository;
-    private final CityRepository cityRepository;
-    private final CityShopRepository cityShopRepository;
+    @Autowired
+    private ShopRepository shopRepository;
 
-    public ShopController(
-            ShopRepository shopRepository,
-            CityRepository cityRepository,
-            CityShopRepository cityShopRepository) {
-        this.shopRepository = shopRepository;
-        this.cityRepository = cityRepository;
-        this.cityShopRepository = cityShopRepository;
-    }
+    @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
+    private CityShopRepository cityShopRepository;
 
     @RequestMapping(value = "/inCity/{cityName}", method = RequestMethod.GET)
     Collection<String> findShopsByCityName(@PathVariable String cityName) {

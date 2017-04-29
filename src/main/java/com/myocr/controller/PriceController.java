@@ -11,6 +11,7 @@ import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,10 +25,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/prices")
 public class PriceController {
-    private final PriceRepository priceRepository;
-    private final ReceiptItemRepository receiptItemRepository;
-    private final CityShopRepository cityShopRepository;
-    private final CityShopReceiptItemRepository cityShopReceiptItemRepository;
+    @Autowired
+    private PriceRepository priceRepository;
+
+    @Autowired
+    private ReceiptItemRepository receiptItemRepository;
+
+    @Autowired
+    private CityShopRepository cityShopRepository;
+
+    @Autowired
+    private CityShopReceiptItemRepository cityShopReceiptItemRepository;
 
     public PriceController(PriceRepository priceRepository,
                            ReceiptItemRepository receiptItemRepository,
