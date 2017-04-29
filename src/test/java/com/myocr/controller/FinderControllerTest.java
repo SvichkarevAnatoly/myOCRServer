@@ -102,13 +102,21 @@ public class FinderControllerTest {
         final CityShop spbAuchan = CityShop.link(spb, auchan);
         shopRepository.save(auchan);
 
+        final Shop karusel = new Shop("Karusel");
+        final CityShop spbKarusel = CityShop.link(spb, karusel);
+        shopRepository.save(karusel);
+
         final List<String> itemNames = Arrays.asList("item1", "item2", "item3", "i34534");
         final List<ReceiptItem> items = itemNames.stream().map(ReceiptItem::new).collect(Collectors.toList());
         final Iterable<ReceiptItem> savedItems = receiptItemRepository.save(items);
 
         final List<CityShopReceiptItem> csItems = new ArrayList<>();
         for (ReceiptItem savedItem : savedItems) {
-            csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan)));
+            if (savedItem.getName().equals("item2")) {
+                csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbKarusel)));
+            } else {
+                csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan)));
+            }
         }
 
         Calendar cal = Calendar.getInstance();
@@ -168,5 +176,27 @@ public class FinderControllerTest {
                 .andExpect(jsonPath("$[2].item", is("item1")))
                 .andExpect(jsonPath("$[2].price", is(100)))
                 .andExpect(jsonPath("$[2].date", is(TimeUtil.parse(today))));
+    }
+
+    @Test
+    public void findReceiptItemsLikeInCityAndShop() throws Exception {
+        final Calendar cal = Calendar.getInstance();
+        final Date today = cal.getTime();
+        cal.add(Calendar.DATE, 2);
+        final Date nextNextDay = cal.getTime();
+
+        mockMvc.perform(get("/find/pricesInCity?city=Spb&shop=Auchan&q=ite"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].item", is("item3")))
+                .andExpect(jsonPath("$[0].price", is(300)))
+                .andExpect(jsonPath("$[0].date", is(TimeUtil.parse(nextNextDay))))
+
+                .andExpect(jsonPath("$[1].item", is("item1")))
+                .andExpect(jsonPath("$[1].price", is(100)))
+                .andExpect(jsonPath("$[1].date", is(TimeUtil.parse(today))));
     }
 }
