@@ -159,7 +159,7 @@ public class FinderControllerTest {
         cal.add(Calendar.DATE, 1);
         final Date nextNextDay = cal.getTime();
 
-        mockMvc.perform(get("/find/pricesInCity?city=Spb&q=ite"))
+        mockMvc.perform(get("/find/prices?city=Spb&q=ite"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
@@ -185,7 +185,7 @@ public class FinderControllerTest {
         cal.add(Calendar.DATE, 2);
         final Date nextNextDay = cal.getTime();
 
-        mockMvc.perform(get("/find/pricesInCity?city=Spb&shop=Auchan&q=ite"))
+        mockMvc.perform(get("/find/prices?city=Spb&shop=Auchan&q=ite"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))

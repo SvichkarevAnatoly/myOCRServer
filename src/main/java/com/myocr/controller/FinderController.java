@@ -33,10 +33,10 @@ public class FinderController {
         return receiptItems.stream().map(ReceiptItem::getName).collect(Collectors.toList());
     }
 
-    @GetMapping("/pricesInCity")
+    @GetMapping("/prices")
     List<PriceDateReceiptItemResponse> findReceiptItemsLikeInCityAndShop(
-            @RequestParam("q") String receiptItemSubstring,
-            @RequestParam String city, @RequestParam(required = false) String shop) {
+            @RequestParam String city, @RequestParam(required = false) String shop,
+            @RequestParam("q") String receiptItemSubstring) {
         final Collection<Price> entities;
         if (shop != null) {
             entities = priceRepository
