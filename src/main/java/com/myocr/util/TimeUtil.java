@@ -14,6 +14,9 @@ public class TimeUtil {
     }
 
     public static String parse(Date time) {
+        if (time == null) {
+            return "";
+        }
         return DATE_FORMAT.format(time);
     }
 
