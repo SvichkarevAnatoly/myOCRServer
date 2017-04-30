@@ -65,9 +65,14 @@ public class FinderController {
                     .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(
                             receiptItemSubstring, city, shop);
         } else {
-            return priceRepository
-                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
-                            receiptItemSubstring, city);
+            if (city == null) {
+                return priceRepository
+                        .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingOrderByTimeDesc(receiptItemSubstring);
+            } else {
+                return priceRepository
+                        .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
+                                receiptItemSubstring, city);
+            }
         }
     }
 }
