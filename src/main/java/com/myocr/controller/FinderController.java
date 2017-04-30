@@ -52,8 +52,13 @@ public class FinderController {
 
     // get prices by query
     private Iterable<Price> getEntities(String receiptItemSubstring, String city, String shop) {
-        if (city == null && shop == null && receiptItemSubstring == null) {
-            return priceRepository.findAll();
+        if (city == null && shop == null) {
+            if (receiptItemSubstring == null) {
+                return priceRepository.findAll();
+            } else {
+                return priceRepository
+                        .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingOrderByTimeDesc(receiptItemSubstring);
+            }
         }
 
         if (receiptItemSubstring == null) {
@@ -65,14 +70,9 @@ public class FinderController {
                     .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(
                             receiptItemSubstring, city, shop);
         } else {
-            if (city == null) {
-                return priceRepository
-                        .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingOrderByTimeDesc(receiptItemSubstring);
-            } else {
-                return priceRepository
-                        .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
-                                receiptItemSubstring, city);
-            }
+            return priceRepository
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
+                            receiptItemSubstring, city);
         }
     }
 }
