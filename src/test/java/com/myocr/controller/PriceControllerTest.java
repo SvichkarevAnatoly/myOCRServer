@@ -20,6 +20,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -42,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,6 +59,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @WebAppConfiguration
 @TestPropertySource(locations = "classpath:test.properties")
 public class PriceControllerTest {
+    private final static Logger log = LoggerFactory.getLogger(PriceControllerTest.class);
+
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
@@ -168,7 +173,7 @@ public class PriceControllerTest {
 
         final String savedPriceJson = json(
                 new SavePriceRequest(spb.getName(), auchan.getName(), items));
-        System.out.println(savedPriceJson);
+        log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
         assertThat(cityShopReceiptItemRepository.count(), is(2L));
@@ -182,6 +187,36 @@ public class PriceControllerTest {
 
         assertThat(receiptItemRepository.count(), is(3L));
         assertThat(cityShopReceiptItemRepository.count(), is(3L));
+    }
+
+    @Test
+    public void saveReceiptItemWithManySpaces() throws Exception {
+        final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
+                new SavePriceRequest.ReceiptPriceItem("  hot \n \t chicken \t\n ", 3000));
+
+        final String savedPriceJson = json(
+                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+        log.info(savedPriceJson);
+
+        assertThat(receiptItemRepository.count(), is(2L));
+        assertThat(cityShopReceiptItemRepository.count(), is(2L));
+
+        mockMvc.perform(post("/prices/save/")
+                .contentType(contentType).content(savedPriceJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", is(1)));
+
+        assertThat(receiptItemRepository.count(), is(3L));
+        assertThat(cityShopReceiptItemRepository.count(), is(3L));
+
+        final String expectedReceiptItem = "hot chicken";
+        final ReceiptItem hotChicken = receiptItemRepository.findByName(expectedReceiptItem);
+        assertNotNull(hotChicken);
+        log.info(hotChicken.toString());
+        assertEquals(expectedReceiptItem, hotChicken.getName());
+        assertNotNull(hotChicken.getId());
     }
 
     @Test

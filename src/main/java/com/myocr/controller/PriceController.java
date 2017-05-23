@@ -9,6 +9,7 @@ import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
+import com.myocr.util.ReceiptItemUtil;
 import com.myocr.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +87,10 @@ public class PriceController {
                 throw new IllegalArgumentException("Shop in city must exist!");
             }
 
-            ReceiptItem dbItem = receiptItemRepository.findByName(receiptItem);
+            final String preparedReceiptItem = ReceiptItemUtil.prepareToSave(receiptItem);
+            ReceiptItem dbItem = receiptItemRepository.findByName(preparedReceiptItem);
             if (dbItem == null) {
-                dbItem = receiptItemRepository.save(new ReceiptItem(receiptItem));
+                dbItem = receiptItemRepository.save(new ReceiptItem(preparedReceiptItem));
             }
 
             item = cityShopReceiptItemRepository.save(new CityShopReceiptItem(dbItem, dbCityShop));
