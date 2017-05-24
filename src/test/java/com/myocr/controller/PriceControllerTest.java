@@ -16,6 +16,7 @@ import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
 import com.myocr.repository.ShopRepository;
 import com.myocr.util.TimeUtil;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -217,6 +218,63 @@ public class PriceControllerTest {
         log.info(hotChicken.toString());
         assertEquals(expectedReceiptItem, hotChicken.getName());
         assertNotNull(hotChicken.getId());
+    }
+
+    @Test
+    public void trySaveToLongString() throws Exception {
+        final String tooLongReceiptItem = RandomStringUtils.randomAlphabetic(200);
+        final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
+                new SavePriceRequest.ReceiptPriceItem(tooLongReceiptItem, 3000));
+
+        final String savedPriceJson = json(
+                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+        log.info(savedPriceJson);
+
+        assertThat(receiptItemRepository.count(), is(2L));
+        assertThat(cityShopReceiptItemRepository.count(), is(2L));
+
+        mockMvc.perform(post("/prices/save/")
+                .contentType(contentType).content(savedPriceJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", is(0)));
+
+        assertThat(receiptItemRepository.count(), is(2L));
+        assertThat(cityShopReceiptItemRepository.count(), is(2L));
+    }
+
+    @Test
+    public void trySaveSeveralButOneNotValid() throws Exception {
+        final String notValidReceiptItem = "\t";
+        final String validReceiptItem = "hot chicken";
+
+        final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
+        items.add(new SavePriceRequest.ReceiptPriceItem(notValidReceiptItem, 3000));
+        items.add(new SavePriceRequest.ReceiptPriceItem(validReceiptItem, 200));
+
+        final String savedPriceJson = json(
+                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+        log.info(savedPriceJson);
+
+        assertThat(receiptItemRepository.count(), is(2L));
+        assertThat(cityShopReceiptItemRepository.count(), is(2L));
+
+        mockMvc.perform(post("/prices/save/")
+                .contentType(contentType).content(savedPriceJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", is(1)));
+
+        assertThat(receiptItemRepository.count(), is(3L));
+        assertThat(cityShopReceiptItemRepository.count(), is(3L));
+
+        final ReceiptItem validItem = receiptItemRepository.findByName(validReceiptItem);
+        assertNotNull(validItem);
+        log.info(validItem.toString());
+        assertEquals(validReceiptItem, validItem.getName());
+        assertNotNull(validItem.getId());
     }
 
     @Test

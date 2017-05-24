@@ -54,7 +54,7 @@ public class PriceController {
 
         final List<Price> prices = new ArrayList<>();
         for (SavePriceRequest.ReceiptPriceItem requestItem : request.getItems()) {
-            if (StringUtils.isEmpty(requestItem.getName()) || (requestItem.getPrice() <= 0)) {
+            if (!ReceiptItemUtil.isValid(requestItem.getName()) || (requestItem.getPrice() <= 0)) {
                 continue;
             }
             final CityShopReceiptItem item = getCityShopReceiptItem(

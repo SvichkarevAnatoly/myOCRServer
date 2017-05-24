@@ -12,7 +12,7 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(value = Parameterized.class)
-public class ReceiptItemUtilTest {
+public class ReceiptItemUtilPrepareToSaveTest {
     @Parameter
     public String receiptItem;
 
