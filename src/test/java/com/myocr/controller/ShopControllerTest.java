@@ -1,27 +1,10 @@
 package com.myocr.controller;
 
-import com.myocr.Application;
-import com.myocr.RepositoryUtil;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.Shop;
-import com.myocr.repository.CityRepository;
-import com.myocr.repository.CityShopRepository;
-import com.myocr.repository.ShopRepository;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,38 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
-@WebAppConfiguration
-@TestPropertySource(locations = "classpath:test.properties")
-public class ShopControllerTest {
-    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
-
-    private MockMvc mockMvc;
-
+public class ShopControllerTest extends AbstractControllerTest {
     private List<String> cityNames = Arrays.asList("Spb", "Nsk");
     private List<String> shopNames = Arrays.asList("Auchan", "Prisma", "Karusel", "Megas");
 
-    @Autowired
-    private CityRepository cityRepository;
-
-    @Autowired
-    private ShopRepository shopRepository;
-
-    @Autowired
-    private CityShopRepository cityShopRepository;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @Before
-    public void setup() throws Exception {
-        mockMvc = webAppContextSetup(webApplicationContext).build();
-
+    @Override
+    public void setUp() throws Exception {
         final City spb = cityRepository.save(new City(cityNames.get(0)));
         final City nsk = cityRepository.save(new City(cityNames.get(1)));
 
@@ -83,11 +41,6 @@ public class ShopControllerTest {
         CityShop.link(nsk, megas);
 
         shopRepository.save(Arrays.asList(auchan, prisma, karusel, megas));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        RepositoryUtil.deleteAll(cityShopRepository, cityRepository, shopRepository);
     }
 
     @Test
