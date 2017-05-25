@@ -1,7 +1,5 @@
 package com.myocr.controller;
 
-import com.myocr.Application;
-import com.myocr.RepositoryUtil;
 import com.myocr.controller.json.SavePriceRequest;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
@@ -9,36 +7,16 @@ import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.Price;
 import com.myocr.entity.ReceiptItem;
 import com.myocr.entity.Shop;
-import com.myocr.repository.CityRepository;
-import com.myocr.repository.CityShopReceiptItemRepository;
-import com.myocr.repository.CityShopRepository;
-import com.myocr.repository.PriceRepository;
-import com.myocr.repository.ReceiptItemRepository;
-import com.myocr.repository.ShopRepository;
 import com.myocr.util.TimeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -53,42 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
-@WebAppConfiguration
-@TestPropertySource(locations = "classpath:test.properties")
-public class PriceControllerTest {
+public class PriceControllerTest extends AbstractControllerTest {
     private final static Logger log = LoggerFactory.getLogger(PriceControllerTest.class);
-
-    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
-
-    private MockMvc mockMvc;
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
-    @Autowired
-    private CityRepository cityRepository;
-
-    @Autowired
-    private ShopRepository shopRepository;
-
-    @Autowired
-    private CityShopRepository cityShopRepository;
-
-    @Autowired
-    private CityShopReceiptItemRepository cityShopReceiptItemRepository;
-
-    @Autowired
-    private ReceiptItemRepository receiptItemRepository;
-
-    @Autowired
-    private PriceRepository priceRepository;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
 
     private City spb;
     private Shop auchan;
@@ -99,22 +45,8 @@ public class PriceControllerTest {
     private ReceiptItem pasta;
     private CityShopReceiptItem spbAuchanPasta;
 
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-
-        mappingJackson2HttpMessageConverter = Arrays.stream(converters)
-                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-                .findAny()
-                .orElse(null);
-
-        assertNotNull("the JSON message converter must not be null",
-                mappingJackson2HttpMessageConverter);
-    }
-
     @Before
     public void setup() throws Exception {
-        mockMvc = webAppContextSetup(webApplicationContext).build();
-
         shopRepository.deleteAll();
         cityRepository.deleteAll();
         cityShopRepository.deleteAll();
@@ -130,18 +62,6 @@ public class PriceControllerTest {
 
         pasta = receiptItemRepository.save(new ReceiptItem("Pasta"));
         spbAuchanPasta = cityShopReceiptItemRepository.save(new CityShopReceiptItem(pasta, spbAuchan));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        RepositoryUtil.deleteAll(
-                priceRepository,
-                cityShopReceiptItemRepository,
-                receiptItemRepository,
-                cityShopRepository,
-                cityRepository,
-                shopRepository
-        );
     }
 
     @Test
@@ -298,11 +218,5 @@ public class PriceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", is(1)));
-    }
-
-    private String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
     }
 }
