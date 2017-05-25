@@ -1,8 +1,10 @@
 package com.myocr;
 
+import com.myocr.entity.Cities;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.Shop;
+import com.myocr.entity.Shops;
 import com.myocr.repository.CityRepository;
 import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
@@ -74,7 +76,11 @@ public class AbstractSpringTest {
                 shopRepository);
     }
 
-    protected CityShop generate(String city, String shop) {
+    protected CityShop generateShop(Cities city, Shops shop) {
+        return generateShop(city.name(), shop.name());
+    }
+
+    private CityShop generateShop(String city, String shop) {
         City savedCity = cityRepository.findByName(city);
         if (savedCity == null) {
             savedCity = cityRepository.save(new City(city));
