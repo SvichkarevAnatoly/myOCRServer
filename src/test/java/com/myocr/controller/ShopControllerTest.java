@@ -1,5 +1,6 @@
 package com.myocr.controller;
 
+import com.myocr.AbstractSpringTest;
 import com.myocr.entity.Shop;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-public class ShopControllerTest extends AbstractControllerTest {
+public class ShopControllerTest extends AbstractSpringTest {
     private static final String SPB = "Spb";
     private static final String NSK = "Nsk";
 

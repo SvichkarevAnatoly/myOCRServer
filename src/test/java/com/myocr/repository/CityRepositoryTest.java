@@ -1,16 +1,10 @@
 package com.myocr.repository;
 
-import com.myocr.Application;
+import com.myocr.AbstractSpringTest;
 import com.myocr.entity.City;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,26 +18,15 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
-@WebAppConfiguration
-@TestPropertySource(locations = "classpath:test.properties")
-public class CityRepositoryTest {
-
-    @Autowired
-    private CityRepository cityRepository;
+public class CityRepositoryTest extends AbstractSpringTest {
 
     private List<String> cityNames = Arrays.asList("Spb", "Nsk");
 
-    @Before
-    public void setup() throws Exception {
+    @Override
+    public void setUp() throws Exception {
         final List<City> cities = IntStream.range(0, cityNames.size())
                 .mapToObj(i -> new City(cityNames.get(i))).collect(toList());
         cityRepository.save(cities);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        cityRepository.deleteAll();
     }
 
     @Test

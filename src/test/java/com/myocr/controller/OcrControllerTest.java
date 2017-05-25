@@ -1,6 +1,7 @@
 package com.myocr.controller;
 
 import com.google.gson.Gson;
+import com.myocr.AbstractSpringTest;
 import com.myocr.controller.json.OcrReceiptResponse;
 import com.myocr.model.align.Aligner;
 import com.myocr.model.align.ReceiptItemMatches;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-public class OcrControllerTest extends AbstractControllerTest {
+public class OcrControllerTest extends AbstractSpringTest {
 
     @Test
     public void ocrImage() throws Exception {

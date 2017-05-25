@@ -1,5 +1,6 @@
 package com.myocr.controller;
 
+import com.myocr.AbstractSpringTest;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.CityShopReceiptItem;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-public class FinderControllerTest extends AbstractControllerTest {
+public class FinderControllerTest extends AbstractSpringTest {
 
     @Override
     public void setUp() throws Exception {

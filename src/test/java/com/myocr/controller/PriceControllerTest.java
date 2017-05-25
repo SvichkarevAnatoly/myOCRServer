@@ -1,5 +1,6 @@
 package com.myocr.controller;
 
+import com.myocr.AbstractSpringTest;
 import com.myocr.controller.json.SavePriceRequest;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-public class PriceControllerTest extends AbstractControllerTest {
+public class PriceControllerTest extends AbstractSpringTest {
     private final static Logger log = LoggerFactory.getLogger(PriceControllerTest.class);
 
     private City spb;

@@ -1,6 +1,5 @@
-package com.myocr.controller;
+package com.myocr;
 
-import com.myocr.Application;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.Shop;
@@ -34,7 +33,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
 @TestPropertySource(locations = "classpath:test.properties")
-public class AbstractControllerTest {
+public class AbstractSpringTest {
     protected MockMvc mockMvc;
 
     @Autowired
