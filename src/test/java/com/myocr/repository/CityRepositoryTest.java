@@ -7,11 +7,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.toList;
+import static com.myocr.entity.Cities.Nsk;
+import static com.myocr.entity.Cities.Spb;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -20,13 +19,10 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 public class CityRepositoryTest extends AbstractSpringTest {
 
-    private List<String> cityNames = Arrays.asList("Spb", "Nsk");
-
     @Override
     public void setUp() throws Exception {
-        final List<City> cities = IntStream.range(0, cityNames.size())
-                .mapToObj(i -> new City(cityNames.get(i))).collect(toList());
-        cityRepository.save(cities);
+        generateCity(Spb);
+        generateCity(Nsk);
     }
 
     @Test
@@ -38,15 +34,14 @@ public class CityRepositoryTest extends AbstractSpringTest {
             repositoryCityNames.add(city.getName());
         }
 
-        assertThat(repositoryCityNames, containsInAnyOrder(cityNames.toArray()));
+        assertThat(repositoryCityNames, containsInAnyOrder(Spb.name(), Nsk.name()));
     }
 
     @Test
     public void findByName() throws Exception {
-        final String cityName = "Spb";
-        final City spb = cityRepository.findByName(cityName);
+        final City spb = cityRepository.findByName(Spb.name());
 
         assertThat(spb, is(notNullValue()));
-        assertThat(spb.getName(), is(cityName));
+        assertThat(spb.getName(), is(Spb.name()));
     }
 }

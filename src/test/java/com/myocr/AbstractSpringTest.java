@@ -3,6 +3,9 @@ package com.myocr;
 import com.myocr.entity.Cities;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
+import com.myocr.entity.CityShopReceiptItem;
+import com.myocr.entity.ReceiptItem;
+import com.myocr.entity.ReceiptItems;
 import com.myocr.entity.Shop;
 import com.myocr.entity.Shops;
 import com.myocr.repository.CityRepository;
@@ -76,23 +79,57 @@ public class AbstractSpringTest {
                 shopRepository);
     }
 
+    protected City generateCity(Cities city) {
+        return generateCity(city.name());
+    }
+
+    private City generateCity(String city) {
+        final City savedCity = cityRepository.findByName(city);
+        if (savedCity != null) {
+            return savedCity;
+        }
+        return cityRepository.save(new City(city));
+    }
+
     protected CityShop generateShop(Cities city, Shops shop) {
         return generateShop(city.name(), shop.name());
     }
 
     private CityShop generateShop(String city, String shop) {
-        City savedCity = cityRepository.findByName(city);
-        if (savedCity == null) {
-            savedCity = cityRepository.save(new City(city));
+        CityShop savedCityShop = cityShopRepository.findByCityNameAndShopName(city, shop);
+        if (savedCityShop != null) {
+            return savedCityShop;
         }
+
+        City savedCity = generateCity(city);
 
         Shop savedShop = shopRepository.findByName(shop);
         if (savedShop == null) {
             savedShop = shopRepository.save(new Shop(shop));
         }
 
-        final CityShop savedCityShop = new CityShop(savedCity, savedShop);
+        savedCityShop = new CityShop(savedCity, savedShop);
         return cityShopRepository.save(savedCityShop);
+    }
+
+    protected CityShopReceiptItem generateReceiptItem(ReceiptItems item, Cities city, Shops shop) {
+        return generateReceiptItem(item.name(), city.name(), shop.name());
+    }
+
+    private CityShopReceiptItem generateReceiptItem(String item, String city, String shop) {
+        CityShopReceiptItem savedCityShopItem = cityShopReceiptItemRepository
+                .findByReceiptItemNameAndCityShopCityNameAndCityShopShopName(item, city, shop);
+        if (savedCityShopItem != null) {
+            return savedCityShopItem;
+        }
+
+        final CityShop savedCityShop = generateShop(city, shop);
+        ReceiptItem savedItem = receiptItemRepository.findByName(item);
+        if (savedItem == null) {
+            savedItem = receiptItemRepository.save(new ReceiptItem(item));
+        }
+
+        return cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, savedCityShop));
     }
 
     protected String json(Object o) throws IOException {
