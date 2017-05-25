@@ -7,4 +7,6 @@ import java.util.Collection;
 
 public interface ShopRepository extends CrudRepository<Shop, Long> {
     Collection<Shop> findByCityShopsCityName(String cityName);
+
+    Shop findByName(String shopName);
 }
