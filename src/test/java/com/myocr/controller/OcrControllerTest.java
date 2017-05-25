@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.io.InputStream;
 import java.util.List;
 
+import static com.myocr.entity.Cities.Spb;
+import static com.myocr.entity.Shops.Auchan;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
@@ -42,7 +44,7 @@ public class OcrControllerTest extends AbstractSpringTest {
                 "pricesImage", "prices.jpg", null, pricesImageContent);
 
         final MvcResult result = mockMvc
-                .perform(fileUpload("/ocr/Sbp/Auchan")
+                .perform(fileUpload("/ocr/" + Spb + "/" + Auchan)
                         .file(receiptItemsImage)
                         .file(pricesImage))
                 .andDo(print())

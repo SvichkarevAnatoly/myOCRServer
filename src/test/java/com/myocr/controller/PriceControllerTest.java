@@ -23,6 +23,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.myocr.entity.Cities.Spb;
+import static com.myocr.entity.ReceiptItems.Limon;
+import static com.myocr.entity.ReceiptItems.Pizza;
+import static com.myocr.entity.Shops.Auchan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,39 +47,33 @@ public class PriceControllerTest extends AbstractSpringTest {
     private ReceiptItem pizza;
     private CityShopReceiptItem spbAuchanPizza;
 
-    private ReceiptItem pasta;
-    private CityShopReceiptItem spbAuchanPasta;
+    private ReceiptItem limon;
+    private CityShopReceiptItem spbAuchanLimon;
 
     @Before
     public void setup() throws Exception {
-        shopRepository.deleteAll();
-        cityRepository.deleteAll();
-        cityShopRepository.deleteAll();
-        receiptItemRepository.deleteAll();
+        spb = generateCity(Spb);
+        final CityShop spbAuchan = generateShop(Spb, Auchan);
+        auchan = spbAuchan.getShop();
 
-        spb = cityRepository.save(new City("Spb"));
-        auchan = new Shop("Auchan");
-        final CityShop spbAuchan = CityShop.link(spb, auchan);
-        auchan = shopRepository.save(auchan);
+        spbAuchanPizza = generateReceiptItem(Pizza, Spb, Auchan);
+        pizza = spbAuchanPizza.getReceiptItem();
 
-        pizza = receiptItemRepository.save(new ReceiptItem("Pizza"));
-        spbAuchanPizza = cityShopReceiptItemRepository.save(new CityShopReceiptItem(pizza, spbAuchan));
-
-        pasta = receiptItemRepository.save(new ReceiptItem("Pasta"));
-        spbAuchanPasta = cityShopReceiptItemRepository.save(new CityShopReceiptItem(pasta, spbAuchan));
+        spbAuchanLimon = generateReceiptItem(Limon, Spb, Auchan);
+        limon = spbAuchanLimon.getReceiptItem();
     }
 
     @Test
     public void save() throws Exception {
         final Date now = Calendar.getInstance().getTime();
         final Price pizzaPrice = new Price(1500, now, spbAuchanPizza);
-        final Price pastaPrice = new Price(1000, now, spbAuchanPasta);
+        final Price limonPrice = new Price(1000, now, spbAuchanLimon);
 
         final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
         final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
         items.add(pizzaItem);
-        final SavePriceRequest.ReceiptPriceItem pastaItem = new SavePriceRequest.ReceiptPriceItem(pasta.getName(), pastaPrice.getValue());
-        items.add(pastaItem);
+        final SavePriceRequest.ReceiptPriceItem limonItem = new SavePriceRequest.ReceiptPriceItem(limon.getName(), limonPrice.getValue());
+        items.add(limonItem);
 
         final String savedPriceJson = json(
                 new SavePriceRequest(spb.getName(), auchan.getName(), items));
