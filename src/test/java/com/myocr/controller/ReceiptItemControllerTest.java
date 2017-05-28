@@ -34,7 +34,7 @@ public class ReceiptItemControllerTest extends AbstractSpringTest {
     }
 
     @Test
-    public void findReceiptItemsLike() throws Exception {
+    public void getNamesInCityShop() throws Exception {
         mockMvc.perform(get("/receiptItems?city=" + Spb + "&shop=" + Auchan))
                 .andDo(print())
                 .andExpect(status().isOk())
