@@ -38,16 +38,6 @@ public class PriceController {
     @Autowired
     private CityShopReceiptItemRepository cityShopReceiptItemRepository;
 
-    public PriceController(PriceRepository priceRepository,
-                           ReceiptItemRepository receiptItemRepository,
-                           CityShopRepository cityShopRepository,
-                           CityShopReceiptItemRepository cityShopReceiptItemRepository) {
-        this.priceRepository = priceRepository;
-        this.receiptItemRepository = receiptItemRepository;
-        this.cityShopRepository = cityShopRepository;
-        this.cityShopReceiptItemRepository = cityShopReceiptItemRepository;
-    }
-
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public int save(@RequestBody SavePriceRequest request) throws ParseException {
         Date time = getRequestTime(request);
