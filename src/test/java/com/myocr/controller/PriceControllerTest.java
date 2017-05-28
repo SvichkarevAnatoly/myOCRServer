@@ -27,6 +27,7 @@ import static com.myocr.entity.Shops.Auchan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -110,17 +111,13 @@ public class PriceControllerTest extends AbstractSpringTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$", is(1)));
+                .andExpect(jsonPath("$", is(0)));
 
-        assertThat(receiptItemRepository.count(), is(3L));
-        assertThat(cityShopReceiptItemRepository.count(), is(3L));
+        assertThat(receiptItemRepository.count(), is(2L));
+        assertThat(cityShopReceiptItemRepository.count(), is(2L));
 
         final String expectedReceiptItem = "hot chicken";
-        final ReceiptItem hotChicken = receiptItemRepository.findByName(expectedReceiptItem);
-        assertNotNull(hotChicken);
-        log.info(hotChicken.toString());
-        assertEquals(expectedReceiptItem, hotChicken.getName());
-        assertNotNull(hotChicken.getId());
+        assertNull(receiptItemRepository.findByName(expectedReceiptItem));
     }
 
     @Test

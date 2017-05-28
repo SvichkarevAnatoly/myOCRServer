@@ -9,12 +9,7 @@ public class SimpleAligner implements Aligner {
     private final static char RIGHT = '→';
     private final static char DIAG = '↘';
 
-    // штрафы
-    // за делецию
-    private int deletion;
-    // за несовпадение
-    private int mismatch;
-    private int match;
+    private final AlignComparator comparator;
 
     // сравниваемые строки
     private String str1;
@@ -33,7 +28,7 @@ public class SimpleAligner implements Aligner {
     private char backtrack[][];
 
     public SimpleAligner() {
-        this(1, 1, 1);
+        comparator = new SimpleAlignComparator();
     }
 
     // от соотношения двух этих параметров зависит выравнивание
@@ -42,9 +37,7 @@ public class SimpleAligner implements Aligner {
     }
 
     public SimpleAligner(int deletion, int mismatch, int match) {
-        this.deletion = deletion;
-        this.mismatch = mismatch;
-        this.match = match;
+        comparator = new SimpleAlignComparator(deletion, mismatch, match);
     }
 
     // возвращает меру подобия двух строк,
@@ -63,14 +56,14 @@ public class SimpleAligner implements Aligner {
 
     // вернуть первую выровненную строку
     // предварительно нужно вызвать align(string1, string2)
-    public String getAlignString1() {
+    public String getAlign1() {
         recovery();
         return alignStr1;
     }
 
     // вернуть вторую выровненную строку
     // предварительно нужно вызвать align(string1, string2)
-    public String getAlignString2() {
+    public String getAlign2() {
         recovery();
         return alignStr2;
     }
@@ -102,10 +95,10 @@ public class SimpleAligner implements Aligner {
 
     private void initBoarders() {
         for (int i = 1; i <= s2Len; i++) {
-            score[i][0] = -deletion * i;
+            score[i][0] = -comparator.getDeletion() * i;
         }
         for (int i = 1; i <= s1Len; i++) {
-            score[0][i] = -deletion * i;
+            score[0][i] = -comparator.getDeletion() * i;
         }
     }
 
@@ -117,10 +110,10 @@ public class SimpleAligner implements Aligner {
     private void fillScoreMatrix() {
         for (int i = 1; i < s2Len + 1; i++) {
             for (int j = 1; j < s1Len + 1; j++) {
-                final int up = score[i - 1][j] - deletion;
-                final int left = score[i][j - 1] - deletion;
+                final int up = score[i - 1][j] - comparator.getDeletion();
+                final int left = score[i][j - 1] - comparator.getDeletion();
 
-                final int adding = str2.charAt(i - 1) == str1.charAt(j - 1) ? match : -mismatch;
+                final int adding = comparator.compare(str2.charAt(i - 1), str1.charAt(j - 1));
                 final int diag = score[i - 1][j - 1] + adding;
 
                 final int maxUpLeft = Math.max(up, left);
@@ -132,9 +125,9 @@ public class SimpleAligner implements Aligner {
     private void fillBacktrack() {
         for (int i = 1; i < s2Len + 1; i++) {
             for (int j = 1; j < s1Len + 1; j++) {
-                if (score[i][j] == score[i - 1][j] - deletion) {
+                if (score[i][j] == score[i - 1][j] - comparator.getDeletion()) {
                     backtrack[i - 1][j - 1] = DOWN;
-                } else if (score[i][j] == score[i][j - 1] - deletion) {
+                } else if (score[i][j] == score[i][j - 1] - comparator.getDeletion()) {
                     backtrack[i - 1][j - 1] = RIGHT;
                 } else {
                     backtrack[i - 1][j - 1] = DIAG;

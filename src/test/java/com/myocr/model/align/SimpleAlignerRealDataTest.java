@@ -17,14 +17,14 @@ public class SimpleAlignerRealDataTest {
 
         assertThat(alignment.align(ocr, real), is(3));
 
-        System.out.println(alignment.getAlignString1());
-        System.out.println(alignment.getAlignString2());
+        System.out.println(alignment.getAlign1());
+        System.out.println(alignment.getAlign2());
 
         alignment.printScoreMatrix();
         alignment.printBacktrack();
 
-        assertThat(alignment.getAlignString1(), is(ocr));
-        assertThat(alignment.getAlignString2(), is(real));
+        assertThat(alignment.getAlign1(), is(ocr));
+        assertThat(alignment.getAlign2(), is(real));
     }
 
     @Test
@@ -38,13 +38,13 @@ public class SimpleAlignerRealDataTest {
         // alignment.printScoreMatrix();
         // alignment.printBacktrack();
 
-        System.out.println(alignment.getAlignString1());
-        System.out.println(alignment.getAlignString2());
+        System.out.println(alignment.getAlign1());
+        System.out.println(alignment.getAlign2());
 
         final String expectedAlignStr1 = "[114ЛЕ Б/К0ЖИ К9РИН0Е 0ХЛ. НА П0187. ММ-- 187. И-";
 
-        assertThat(alignment.getAlignString1(), is(expectedAlignStr1));
-        assertThat(alignment.getAlignString2(), is(expectedChickenAlignment));
+        assertThat(alignment.getAlign1(), is(expectedAlignStr1));
+        assertThat(alignment.getAlign2(), is(expectedChickenAlignment));
     }
 
     @Test
@@ -56,8 +56,8 @@ public class SimpleAlignerRealDataTest {
         for (String foodName : TestRealData.food30Names) {
             final int score = alignment.align(ocrChicken, foodName);
             System.out.println("score = " + score);
-            System.out.println(alignment.getAlignString2());
-            System.out.println(alignment.getAlignString1());
+            System.out.println(alignment.getAlign2());
+            System.out.println(alignment.getAlign1());
             System.out.println();
 
             if (score > maxScore) {
@@ -69,9 +69,9 @@ public class SimpleAlignerRealDataTest {
         System.out.println("--------------------------------------");
         final int score = alignment.align(ocrChicken, maxScoreFoodName);
         System.out.println("score = " + score);
-        final String maxScoreAlignment = alignment.getAlignString2();
+        final String maxScoreAlignment = alignment.getAlign2();
         System.out.println(maxScoreAlignment);
-        System.out.println(alignment.getAlignString1());
+        System.out.println(alignment.getAlign1());
         assertThat(maxScoreAlignment, is(expectedChickenAlignment));
     }
 }
