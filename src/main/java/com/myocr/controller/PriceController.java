@@ -59,7 +59,7 @@ public class PriceController {
             }
             final CityShopReceiptItem item = getCityShopReceiptItem(
                     requestItem.getName(), request.getCityName(), request.getShopName());
-            final Price price = new Price(requestItem.getPrice(), time, item);
+            final Price price = new Price(item, requestItem.getPrice(), time);
             prices.add(price);
         }
 

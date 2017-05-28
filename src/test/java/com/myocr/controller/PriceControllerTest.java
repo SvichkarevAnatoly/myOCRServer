@@ -2,12 +2,9 @@ package com.myocr.controller;
 
 import com.myocr.AbstractSpringTest;
 import com.myocr.controller.json.SavePriceRequest;
-import com.myocr.entity.City;
-import com.myocr.entity.CityShop;
 import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.Price;
 import com.myocr.entity.ReceiptItem;
-import com.myocr.entity.Shop;
 import com.myocr.util.TimeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -24,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.myocr.entity.Cities.Spb;
-import static com.myocr.entity.ReceiptItems.Limon;
+import static com.myocr.entity.ReceiptItems.Lemon;
 import static com.myocr.entity.ReceiptItems.Pizza;
 import static com.myocr.entity.Shops.Auchan;
 import static org.hamcrest.core.Is.is;
@@ -41,42 +38,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PriceControllerTest extends AbstractSpringTest {
     private final static Logger log = LoggerFactory.getLogger(PriceControllerTest.class);
 
-    private City spb;
-    private Shop auchan;
-
-    private ReceiptItem pizza;
-    private CityShopReceiptItem spbAuchanPizza;
-
-    private ReceiptItem limon;
-    private CityShopReceiptItem spbAuchanLimon;
+    private CityShopReceiptItem pizza;
+    private CityShopReceiptItem lemon;
 
     @Before
     public void setup() throws Exception {
-        spb = generateCity(Spb);
-        final CityShop spbAuchan = generateShop(Spb, Auchan);
-        auchan = spbAuchan.getShop();
-
-        spbAuchanPizza = generateReceiptItem(Pizza, Spb, Auchan);
-        pizza = spbAuchanPizza.getReceiptItem();
-
-        spbAuchanLimon = generateReceiptItem(Limon, Spb, Auchan);
-        limon = spbAuchanLimon.getReceiptItem();
+        pizza = generateReceiptItem(Pizza, Spb, Auchan);
+        lemon = generateReceiptItem(Lemon, Spb, Auchan);
     }
 
     @Test
     public void save() throws Exception {
         final Date now = Calendar.getInstance().getTime();
-        final Price pizzaPrice = new Price(1500, now, spbAuchanPizza);
-        final Price limonPrice = new Price(1000, now, spbAuchanLimon);
+        final Price pizzaPrice = new Price(pizza, 1500, now);
+        final Price lemonPrice = new Price(lemon, 1000, now);
 
         final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
-        final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(pizza.getName(), pizzaPrice.getValue());
+        final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(Pizza.name(), pizzaPrice.getValue());
         items.add(pizzaItem);
-        final SavePriceRequest.ReceiptPriceItem limonItem = new SavePriceRequest.ReceiptPriceItem(limon.getName(), limonPrice.getValue());
-        items.add(limonItem);
+        final SavePriceRequest.ReceiptPriceItem lemonItem = new SavePriceRequest.ReceiptPriceItem(Lemon.name(), lemonPrice.getValue());
+        items.add(lemonItem);
 
         final String savedPriceJson = json(
-                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+                new SavePriceRequest(Spb.name(), Auchan.name(), items));
 
         mockMvc.perform(post("/prices/save/")
                 .contentType(contentType).content(savedPriceJson))
@@ -92,7 +76,7 @@ public class PriceControllerTest extends AbstractSpringTest {
                 new SavePriceRequest.ReceiptPriceItem("chicken", 3000));
 
         final String savedPriceJson = json(
-                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+                new SavePriceRequest(Spb.name(), Auchan.name(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -115,7 +99,7 @@ public class PriceControllerTest extends AbstractSpringTest {
                 new SavePriceRequest.ReceiptPriceItem("  hot \n \t chicken \t\n ", 3000));
 
         final String savedPriceJson = json(
-                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+                new SavePriceRequest(Spb.name(), Auchan.name(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -146,7 +130,7 @@ public class PriceControllerTest extends AbstractSpringTest {
                 new SavePriceRequest.ReceiptPriceItem(tooLongReceiptItem, 3000));
 
         final String savedPriceJson = json(
-                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+                new SavePriceRequest(Spb.name(), Auchan.name(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -173,7 +157,7 @@ public class PriceControllerTest extends AbstractSpringTest {
         items.add(new SavePriceRequest.ReceiptPriceItem(validReceiptItem, 200));
 
         final String savedPriceJson = json(
-                new SavePriceRequest(spb.getName(), auchan.getName(), items));
+                new SavePriceRequest(Spb.name(), Auchan.name(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -201,15 +185,15 @@ public class PriceControllerTest extends AbstractSpringTest {
         final String timeString = "31-08-1982 10:20:56";
 
         final Date time = TimeUtil.parse(timeString);
-        final Price pizzaPrice = new Price(1500, time, spbAuchanPizza);
+        final Price pizzaPrice = new Price(pizza, 1500, time);
 
         final List<SavePriceRequest.ReceiptPriceItem> items = new ArrayList<>();
         final SavePriceRequest.ReceiptPriceItem pizzaItem = new SavePriceRequest.ReceiptPriceItem(
-                pizza.getName(), pizzaPrice.getValue());
+                Pizza.name(), pizzaPrice.getValue());
         items.add(pizzaItem);
 
         final String savedPriceJson = json(
-                new SavePriceRequest(spb.getName(), auchan.getName(), timeString, items));
+                new SavePriceRequest(Spb.name(), Auchan.name(), timeString, items));
 
         mockMvc.perform(post("/prices/save/")
                 .contentType(contentType).content(savedPriceJson))

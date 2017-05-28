@@ -23,7 +23,7 @@ public class Price {
     public Price() {
     }
 
-    public Price(int value, Date time, CityShopReceiptItem cityShopReceiptItem) {
+    public Price(CityShopReceiptItem cityShopReceiptItem, int value, Date time) {
         this.value = value;
         this.time = time;
         this.cityShopReceiptItem = cityShopReceiptItem;

@@ -4,9 +4,10 @@ import com.myocr.entity.Price;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Collection;
+import java.util.Date;
 
 public interface PriceRepository extends CrudRepository<Price, Long> {
-    Collection<Price> findByCityShopReceiptItemId(Long cityShopReceiptItemId);
+    Price findByCityShopReceiptItemIdAndValueAndTime(long itemId, int value, Date time);
 
     Collection<Price> findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingOrderByTimeDesc(String receiptItemSubstring);
 

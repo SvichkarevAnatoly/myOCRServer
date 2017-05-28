@@ -4,6 +4,7 @@ import com.myocr.entity.Cities;
 import com.myocr.entity.City;
 import com.myocr.entity.CityShop;
 import com.myocr.entity.CityShopReceiptItem;
+import com.myocr.entity.Price;
 import com.myocr.entity.ReceiptItem;
 import com.myocr.entity.ReceiptItems;
 import com.myocr.entity.Shop;
@@ -31,6 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -130,6 +132,16 @@ public class AbstractSpringTest {
         }
 
         return cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, savedCityShop));
+    }
+
+    protected Price generatePrice(CityShopReceiptItem item, int price, Date time) {
+        Price savedPrice = priceRepository
+                .findByCityShopReceiptItemIdAndValueAndTime(item.getId(), price, time);
+        if (savedPrice != null) {
+            return savedPrice;
+        }
+
+        return priceRepository.save(new Price(item, price, time));
     }
 
     protected String json(Object o) throws IOException {

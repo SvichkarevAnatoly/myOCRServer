@@ -1,21 +1,19 @@
 package com.myocr.controller;
 
 import com.myocr.AbstractSpringTest;
-import com.myocr.entity.City;
-import com.myocr.entity.CityShop;
-import com.myocr.entity.CityShopReceiptItem;
-import com.myocr.entity.ReceiptItem;
-import com.myocr.entity.Shop;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import static com.myocr.entity.Cities.Nsk;
+import static com.myocr.entity.Cities.Spb;
+import static com.myocr.entity.ReceiptItems.Chicken;
+import static com.myocr.entity.ReceiptItems.Lemon;
+import static com.myocr.entity.ReceiptItems.Milk;
+import static com.myocr.entity.ReceiptItems.Pizza;
+import static com.myocr.entity.Shops.Auchan;
+import static com.myocr.entity.Shops.Karusel;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,48 +27,20 @@ public class ReceiptItemControllerTest extends AbstractSpringTest {
 
     @Before
     public void setup() throws Exception {
-        final City spb = cityRepository.save(new City("Spb"));
-        final City nsk = cityRepository.save(new City("Nsk"));
-
-        final Shop auchan = new Shop("Auchan");
-        final CityShop spbAuchan = CityShop.link(spb, auchan);
-        shopRepository.save(auchan);
-
-        final CityShop nskAuchan = CityShop.link(nsk, auchan);
-        cityShopRepository.save(nskAuchan);
-
-        final Shop karusel = new Shop("Karusel");
-        final CityShop spbKarusel = CityShop.link(spb, karusel);
-        shopRepository.save(karusel);
-
-        final List<String> itemNames = Arrays.asList("item1", "item2", "item3", "item4");
-        final List<ReceiptItem> items = itemNames.stream().map(ReceiptItem::new).collect(Collectors.toList());
-        final Iterable<ReceiptItem> savedItems = receiptItemRepository.save(items);
-
-        final List<CityShopReceiptItem> csItems = new ArrayList<>();
-        for (ReceiptItem savedItem : savedItems) {
-            switch (savedItem.getName()) {
-                case "item2":
-                    csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbKarusel)));
-                    break;
-                case "item3":
-                    csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, nskAuchan)));
-                    break;
-                default:
-                    csItems.add(cityShopReceiptItemRepository.save(new CityShopReceiptItem(savedItem, spbAuchan)));
-                    break;
-            }
-        }
+        generateReceiptItem(Lemon, Spb, Auchan);
+        generateReceiptItem(Pizza, Spb, Karusel);
+        generateReceiptItem(Milk, Nsk, Auchan);
+        generateReceiptItem(Chicken, Spb, Auchan);
     }
 
     @Test
     public void findReceiptItemsLike() throws Exception {
-        mockMvc.perform(get("/receiptItems?city=Spb&shop=Auchan"))
+        mockMvc.perform(get("/receiptItems?city=" + Spb + "&shop=" + Auchan))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
 
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$", containsInAnyOrder("item1", "item4")));
+                .andExpect(jsonPath("$", containsInAnyOrder(Lemon.name(), Chicken.name())));
     }
 }
