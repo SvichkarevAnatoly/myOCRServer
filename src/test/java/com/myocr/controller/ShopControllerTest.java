@@ -10,14 +10,16 @@ import java.util.Collection;
 
 import static com.myocr.entity.Cities.Nsk;
 import static com.myocr.entity.Cities.Spb;
+import static com.myocr.entity.Cities.Tomsk;
 import static com.myocr.entity.Shops.Auchan;
 import static com.myocr.entity.Shops.Karusel;
 import static com.myocr.entity.Shops.Megas;
 import static com.myocr.entity.Shops.Prisma;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,6 +37,8 @@ public class ShopControllerTest extends AbstractSpringTest {
         generateShop(Spb, Karusel);
         generateShop(Nsk, Auchan);
         generateShop(Nsk, Megas);
+
+        generateCity(Tomsk);
     }
 
     @Test
@@ -49,13 +53,36 @@ public class ShopControllerTest extends AbstractSpringTest {
 
     @Test
     public void addNewShop() throws Exception {
-        final Collection<Shop> beforeShopsInSpb = shopRepository.findByCityShopsCityName(Spb.name());
+        mockMvc.perform(post("/shops/add/" + Tomsk + "/" + Megas))
+                .andDo(print())
+                .andExpect(status().isOk());
 
-        mockMvc.perform(post("/shops/add/" + Spb + "/Dixy"))
+        assertNotNull(cityShopRepository.findByCityNameAndShopName(Tomsk.name(), Megas.name()));
+
+        final Collection<Shop> shopsInTomsk = shopRepository.findByCityShopsCityName(Tomsk.name());
+        assertEquals(shopsInTomsk.size(), 1);
+    }
+
+    @Test
+    public void addExistedShop() throws Exception {
+        mockMvc.perform(post("/shops/add/" + Spb + "/" + Auchan))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         final Collection<Shop> afterShopsInSpb = shopRepository.findByCityShopsCityName(Spb.name());
-        assertThat(afterShopsInSpb.size() - beforeShopsInSpb.size(), is(1));
+        assertEquals(afterShopsInSpb.size(), 3);
+    }
+
+    @Test
+    public void addEndSpacedShop() throws Exception {
+        mockMvc.perform(post("/shops/add/" + Tomsk + "/" + Karusel + " "))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNotNull(cityShopRepository.findByCityNameAndShopName(Tomsk.name(), Karusel.name()));
+        assertNull(cityShopRepository.findByCityNameAndShopName(Tomsk.name(), Karusel.name() + " "));
+
+        final Collection<Shop> afterShops = shopRepository.findByCityShopsCityName(Tomsk.name());
+        assertEquals(afterShops.size(), 1);
     }
 }

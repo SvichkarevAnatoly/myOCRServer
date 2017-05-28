@@ -3,12 +3,12 @@ package com.myocr.util;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
-import static com.myocr.util.ReceiptItemUtil.isValid;
+import static com.myocr.util.TextFieldUtil.isValid;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ReceiptItemUtilValidateTest {
+public class TextFieldUtilValidateTest {
     @Test
     public void validateNormal() throws Exception {
         assertTrue(isValid("Valid receipt item"));
@@ -49,5 +49,10 @@ public class ReceiptItemUtilValidateTest {
     @Test
     public void validateNotEmptyStringButNoSense() throws Exception {
         assertFalse(isValid("\t"));
+    }
+
+    @Test
+    public void validateTwoLineValue() throws Exception {
+        assertFalse(isValid("Hello\nWorld"));
     }
 }

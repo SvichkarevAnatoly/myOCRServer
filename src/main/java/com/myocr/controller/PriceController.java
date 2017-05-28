@@ -9,7 +9,7 @@ import com.myocr.repository.CityShopReceiptItemRepository;
 import com.myocr.repository.CityShopRepository;
 import com.myocr.repository.PriceRepository;
 import com.myocr.repository.ReceiptItemRepository;
-import com.myocr.util.ReceiptItemUtil;
+import com.myocr.util.TextFieldUtil;
 import com.myocr.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class PriceController {
 
         final List<Price> prices = new ArrayList<>();
         for (SavePriceRequest.ReceiptPriceItem requestItem : request.getItems()) {
-            if (!ReceiptItemUtil.isValid(requestItem.getName()) || (requestItem.getPrice() <= 0)) {
+            if (!TextFieldUtil.isValid(requestItem.getName()) || (requestItem.getPrice() <= 0)) {
                 continue;
             }
             final CityShopReceiptItem item = getCityShopReceiptItem(
@@ -77,7 +77,7 @@ public class PriceController {
                 throw new IllegalArgumentException("Shop in city must exist!");
             }
 
-            final String preparedReceiptItem = ReceiptItemUtil.prepareToSave(receiptItem);
+            final String preparedReceiptItem = TextFieldUtil.prepare(receiptItem);
             ReceiptItem dbItem = receiptItemRepository.findByName(preparedReceiptItem);
             if (dbItem == null) {
                 dbItem = receiptItemRepository.save(new ReceiptItem(preparedReceiptItem));

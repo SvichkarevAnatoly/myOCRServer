@@ -2,5 +2,7 @@ package com.myocr.entity;
 
 public enum Cities {
     Spb,
-    Nsk
+    Nsk,
+    Tomsk,
+    Moscow
 }

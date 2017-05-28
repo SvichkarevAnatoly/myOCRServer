@@ -12,14 +12,14 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(value = Parameterized.class)
-public class ReceiptItemUtilPrepareToSaveTest {
+public class TextFieldUtilPrepareTest {
     @Parameter
     public String receiptItem;
 
     @Parameter(value = 1)
     public String expectedPreparedReceiptItem;
 
-    @Parameters(name = "{index}: prepareToSave(\"{0}\") = \"{1}\"")
+    @Parameters(name = "{index}: prepare(\"{0}\") = \"{1}\"")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"Hello", "Hello"},
@@ -37,8 +37,8 @@ public class ReceiptItemUtilPrepareToSaveTest {
     }
 
     @Test
-    public void prepareToSave() {
+    public void prepare() {
         assertEquals(expectedPreparedReceiptItem,
-                ReceiptItemUtil.prepareToSave(receiptItem));
+                TextFieldUtil.prepare(receiptItem));
     }
 }
