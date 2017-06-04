@@ -1,8 +1,10 @@
 package com.myocr.repository;
 
 import com.myocr.AbstractSpringTest;
+import com.myocr.entity.City;
 import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.ReceiptItem;
+import com.myocr.entity.Shop;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -42,9 +44,11 @@ public class ReceiptItemRepositoryTest extends AbstractSpringTest {
 
     @Test
     public void findByCityAndShop() throws Exception {
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final List<ReceiptItem> items = receiptItemRepository
-                .findByCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName(
-                        Spb.name(), Auchan.name());
+                .findByCityShopReceiptItemsCityShopCityIdAndCityShopReceiptItemsCityShopShopId(
+                        spb.getId(), auchan.getId());
         assertThat(items, hasSize(1));
 
         final ReceiptItem item = items.get(0);

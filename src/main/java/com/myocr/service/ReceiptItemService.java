@@ -15,16 +15,16 @@ public class ReceiptItemService {
         this.receiptItemRepository = receiptItemRepository;
     }
 
-    public List<ReceiptItemMatches> findReceipt(String city, String shop, List<String> ocrReceiptItems) {
-        final List<String> receipts = getNamesInCityShop(city, shop);
+    public List<ReceiptItemMatches> findReceipt(long cityId, long shopId, List<String> ocrReceiptItems) {
+        final List<String> receipts = getNamesInCityShop(cityId, shopId);
         final DataBaseFinder finder = new DataBaseFinder(receipts);
         return finder.findAll(ocrReceiptItems);
     }
 
-    public List<String> getNamesInCityShop(String city, String shop) {
+    public List<String> getNamesInCityShop(long cityId, long shopId) {
         final List<ReceiptItem> receiptItems = receiptItemRepository.
-                findByCityShopReceiptItemsCityShopCityNameAndCityShopReceiptItemsCityShopShopName(
-                        city, shop);
+                findByCityShopReceiptItemsCityShopCityIdAndCityShopReceiptItemsCityShopShopId(
+                        cityId, shopId);
         return receiptItems.stream().map(ReceiptItem::getName)
                 .collect(Collectors.toList());
     }

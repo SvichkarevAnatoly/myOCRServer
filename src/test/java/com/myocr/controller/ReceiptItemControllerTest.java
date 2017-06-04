@@ -1,6 +1,8 @@
 package com.myocr.controller;
 
 import com.myocr.AbstractSpringTest;
+import com.myocr.entity.City;
+import com.myocr.entity.Shop;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +37,9 @@ public class ReceiptItemControllerTest extends AbstractSpringTest {
 
     @Test
     public void getNamesInCityShop() throws Exception {
-        mockMvc.perform(get("/receiptItems?city=" + Spb + "&shop=" + Auchan))
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
+        mockMvc.perform(get("/receiptItems/" + spb.getId() + "/" + auchan.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))

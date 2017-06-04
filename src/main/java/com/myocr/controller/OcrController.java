@@ -35,11 +35,11 @@ public class OcrController {
     @Autowired
     private ReceiptItemRepository receiptItemRepository;
 
-    @PostMapping("/{city}/{shop}")
+    @PostMapping("/{cityId}/{shopId}")
     public OcrReceiptResponse ocrImage(
             @RequestParam MultipartFile receiptItemsImage,
             @RequestParam MultipartFile pricesImage,
-            @PathVariable String city, @PathVariable String shop) throws IOException {
+            @PathVariable long cityId, @PathVariable long shopId) throws IOException {
 
         log.info(receiptItemsImage.getOriginalFilename());
         log.info(pricesImage.getOriginalFilename());
@@ -51,7 +51,7 @@ public class OcrController {
         log.info(Arrays.toString(ocrReceiptItems.toArray()));
 
         final ReceiptItemService service = new ReceiptItemService(receiptItemRepository);
-        final List<ReceiptItemMatches> receiptItemMatches = service.findReceipt(city, shop, ocrReceiptItems);
+        final List<ReceiptItemMatches> receiptItemMatches = service.findReceipt(cityId, shopId, ocrReceiptItems);
 
         final List<String> ocrPrices = ocrPricesImage(pricesImage);
         log.info(Arrays.toString(ocrPrices.toArray()));
