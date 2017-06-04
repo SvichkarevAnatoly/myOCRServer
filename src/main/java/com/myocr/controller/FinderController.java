@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,9 @@ public class FinderController {
     @GetMapping("/prices")
     List<PriceDateReceiptItemResponse> findReceiptItemsLike(
             @RequestParam(value = "q", required = false) String receiptItemSubstring,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String shop) {
-        final Iterable<Price> entities = getEntities(receiptItemSubstring, city, shop);
+            @RequestParam(required = false) Long cityId,
+            @RequestParam(required = false) Long shopId) {
+        final Iterable<Price> entities = getEntities(receiptItemSubstring, cityId, shopId);
 
         final List<PriceDateReceiptItemResponse> response = new ArrayList<>();
         for (Price entity : entities) {
@@ -51,8 +52,8 @@ public class FinderController {
     }
 
     // get prices by query
-    private Iterable<Price> getEntities(String receiptItemSubstring, String city, String shop) {
-        if (city == null && shop == null) {
+    private Iterable<Price> getEntities(String receiptItemSubstring, Long cityId, Long shopId) {
+        if (cityId == null && shopId == null) {
             if (receiptItemSubstring == null) {
                 return priceRepository.findAll();
             } else {
@@ -65,14 +66,17 @@ public class FinderController {
             receiptItemSubstring = "";
         }
 
-        if (shop != null) {
+        if (shopId != null) {
+            if (cityId == null) {
+                return Collections.emptyList();
+            }
             return priceRepository
-                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameAndCityShopReceiptItemCityShopShopNameOrderByTimeDesc(
-                            receiptItemSubstring, city, shop);
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityIdAndCityShopReceiptItemCityShopShopIdOrderByTimeDesc(
+                            receiptItemSubstring, cityId, shopId);
         } else {
             return priceRepository
-                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityNameOrderByTimeDesc(
-                            receiptItemSubstring, city);
+                    .findByCityShopReceiptItemReceiptItemNameIgnoreCaseContainingAndCityShopReceiptItemCityShopCityIdOrderByTimeDesc(
+                            receiptItemSubstring, cityId);
         }
     }
 }

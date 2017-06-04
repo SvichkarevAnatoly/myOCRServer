@@ -1,7 +1,9 @@
 package com.myocr.controller;
 
 import com.myocr.AbstractSpringTest;
+import com.myocr.entity.City;
 import com.myocr.entity.CityShopReceiptItem;
+import com.myocr.entity.Shop;
 import com.myocr.util.TimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,7 @@ import static com.myocr.entity.ReceiptItems.Pizza;
 import static com.myocr.entity.Shops.Auchan;
 import static com.myocr.entity.Shops.Karusel;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -65,7 +68,8 @@ public class FinderControllerTest extends AbstractSpringTest {
         cal.add(Calendar.DATE, 3);
         final Date after3Day = cal.getTime();
 
-        mockMvc.perform(get("/find/prices?city=" + Spb + "&q=ch"))
+        final City spb = cityRepository.findByName(Spb.name());
+        mockMvc.perform(get("/find/prices?cityId=" + spb.getId() + "&q=ch"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
@@ -87,7 +91,9 @@ public class FinderControllerTest extends AbstractSpringTest {
         cal.add(Calendar.DATE, 1);
         final Date nextDay = cal.getTime();
 
-        mockMvc.perform(get("/find/prices?city=" + Spb + "&shop=" + Karusel + "&q=mi"))
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop karusel = shopRepository.findByName(Karusel.name());
+        mockMvc.perform(get("/find/prices?cityId=" + spb.getId() + "&shopId=" + karusel.getId() + "&q=mi"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
@@ -107,7 +113,8 @@ public class FinderControllerTest extends AbstractSpringTest {
         cal.add(Calendar.DATE, 2);
         final Date next3Day = cal.getTime();
 
-        mockMvc.perform(get("/find/prices?city=Spb"))
+        final City spb = cityRepository.findByName(Spb.name());
+        mockMvc.perform(get("/find/prices?cityId=" + spb.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
@@ -124,5 +131,15 @@ public class FinderControllerTest extends AbstractSpringTest {
                 .andExpect(jsonPath("$[2].item", is(Chicken.name())))
                 .andExpect(jsonPath("$[2].price", is(100)))
                 .andExpect(jsonPath("$[2].date", is(TimeUtil.parse(today))));
+    }
+
+    @Test
+    public void findReceiptItemsEmptyCityButNotEmptyShop() throws Exception {
+        final Shop karusel = shopRepository.findByName(Karusel.name());
+        mockMvc.perform(get("/find/prices?shopId=" + karusel.getId() + "&q=mi"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", empty()));
     }
 }
