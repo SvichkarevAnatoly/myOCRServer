@@ -2,9 +2,11 @@ package com.myocr.controller;
 
 import com.myocr.AbstractSpringTest;
 import com.myocr.controller.json.SavePriceRequest;
+import com.myocr.entity.City;
 import com.myocr.entity.CityShopReceiptItem;
 import com.myocr.entity.Price;
 import com.myocr.entity.ReceiptItem;
+import com.myocr.entity.Shop;
 import com.myocr.util.TimeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -60,8 +62,10 @@ public class PriceControllerTest extends AbstractSpringTest {
         final SavePriceRequest.ReceiptPriceItem lemonItem = new SavePriceRequest.ReceiptPriceItem(Lemon.name(), lemonPrice.getValue());
         items.add(lemonItem);
 
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final String savedPriceJson = json(
-                new SavePriceRequest(Spb.name(), Auchan.name(), items));
+                new SavePriceRequest(spb.getId(), auchan.getId(), items));
 
         mockMvc.perform(post("/prices/save/")
                 .contentType(contentType).content(savedPriceJson))
@@ -76,8 +80,10 @@ public class PriceControllerTest extends AbstractSpringTest {
         final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
                 new SavePriceRequest.ReceiptPriceItem("chicken", 3000));
 
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final String savedPriceJson = json(
-                new SavePriceRequest(Spb.name(), Auchan.name(), items));
+                new SavePriceRequest(spb.getId(), auchan.getId(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -99,8 +105,10 @@ public class PriceControllerTest extends AbstractSpringTest {
         final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
                 new SavePriceRequest.ReceiptPriceItem("  hot \n \t chicken \t\n ", 3000));
 
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final String savedPriceJson = json(
-                new SavePriceRequest(Spb.name(), Auchan.name(), items));
+                new SavePriceRequest(spb.getId(), auchan.getId(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -126,8 +134,10 @@ public class PriceControllerTest extends AbstractSpringTest {
         final List<SavePriceRequest.ReceiptPriceItem> items = Collections.singletonList(
                 new SavePriceRequest.ReceiptPriceItem(tooLongReceiptItem, 3000));
 
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final String savedPriceJson = json(
-                new SavePriceRequest(Spb.name(), Auchan.name(), items));
+                new SavePriceRequest(spb.getId(), auchan.getId(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -153,8 +163,10 @@ public class PriceControllerTest extends AbstractSpringTest {
         items.add(new SavePriceRequest.ReceiptPriceItem(notValidReceiptItem, 3000));
         items.add(new SavePriceRequest.ReceiptPriceItem(validReceiptItem, 200));
 
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final String savedPriceJson = json(
-                new SavePriceRequest(Spb.name(), Auchan.name(), items));
+                new SavePriceRequest(spb.getId(), auchan.getId(), items));
         log.info(savedPriceJson);
 
         assertThat(receiptItemRepository.count(), is(2L));
@@ -189,8 +201,10 @@ public class PriceControllerTest extends AbstractSpringTest {
                 Pizza.name(), pizzaPrice.getValue());
         items.add(pizzaItem);
 
+        final City spb = cityRepository.findByName(Spb.name());
+        final Shop auchan = shopRepository.findByName(Auchan.name());
         final String savedPriceJson = json(
-                new SavePriceRequest(Spb.name(), Auchan.name(), timeString, items));
+                new SavePriceRequest(spb.getId(), auchan.getId(), timeString, items));
 
         mockMvc.perform(post("/prices/save/")
                 .contentType(contentType).content(savedPriceJson))

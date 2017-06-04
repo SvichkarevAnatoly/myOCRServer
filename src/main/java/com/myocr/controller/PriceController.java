@@ -48,7 +48,7 @@ public class PriceController {
                 continue;
             }
             final CityShopReceiptItem item = getCityShopReceiptItem(
-                    requestItem.getName(), request.getCityName(), request.getShopName());
+                    requestItem.getName(), request.getCityId(), request.getShopId());
             final Price price = new Price(item, requestItem.getPrice(), time);
             prices.add(price);
         }
@@ -68,11 +68,11 @@ public class PriceController {
         return time;
     }
 
-    private CityShopReceiptItem getCityShopReceiptItem(String receiptItem, String city, String shop) {
+    private CityShopReceiptItem getCityShopReceiptItem(String receiptItem, long cityId, long shopId) {
         CityShopReceiptItem item = cityShopReceiptItemRepository
-                .findByReceiptItemNameAndCityShopCityNameAndCityShopShopName(receiptItem, city, shop);
+                .findByReceiptItemNameAndCityShopCityIdAndCityShopShopId(receiptItem, cityId, shopId);
         if (item == null) {
-            final CityShop dbCityShop = cityShopRepository.findByCityNameAndShopName(city, shop);
+            final CityShop dbCityShop = cityShopRepository.findByCityIdAndShopId(cityId, shopId);
             if (dbCityShop == null) {
                 throw new IllegalArgumentException("Shop in city must exist!");
             }
