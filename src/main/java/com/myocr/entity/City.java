@@ -48,20 +48,4 @@ public class City {
     public void addCityShop(CityShop cityShop) {
         cityShops.add(cityShop);
     }
-
-    /*@Override
-    public String toString() {
-        String result = String.format(
-                "City [id=%d, name='%s']%n",
-                id, name);
-        if (shops != null) {
-            for (Shop shop : shops) {
-                result += String.format(
-                        "Shop[id=%d, name='%s']%n",
-                        shop.getId(), shop.getName());
-            }
-        }
-
-        return result;
-    }*/
 }

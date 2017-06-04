@@ -7,8 +7,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.myocr.entity.Cities.Nsk;
 import static com.myocr.entity.Cities.Spb;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -31,6 +31,9 @@ public class CityControllerTest extends AbstractSpringTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$", containsInAnyOrder(Spb.name(), Nsk.name())));
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is(Spb.name())))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is(Nsk.name())));
     }
 }
