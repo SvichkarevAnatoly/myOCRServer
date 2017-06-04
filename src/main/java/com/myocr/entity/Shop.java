@@ -44,24 +44,4 @@ public class Shop {
     public void setCityShops(List<CityShop> cityShops) {
         this.cityShops = cityShops;
     }
-
-    public void addCityShop(CityShop cityShop) {
-        cityShops.add(cityShop);
-    }
-
-    /*@Override
-    public String toString() {
-        String result = String.format(
-                "Shop [id=%d, name='%s']%n",
-                id, name);
-        if (cities != null) {
-            for (City city : cities) {
-                result += String.format(
-                        "City [id=%d, name='%s']%n",
-                        city.getId(), city.getName());
-            }
-        }
-
-        return result;
-    }*/
 }

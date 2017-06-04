@@ -1,6 +1,7 @@
 package com.myocr.controller;
 
 import com.myocr.AbstractSpringTest;
+import com.myocr.entity.City;
 import com.myocr.entity.Shop;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,13 +16,14 @@ import static com.myocr.entity.Shops.Auchan;
 import static com.myocr.entity.Shops.Karusel;
 import static com.myocr.entity.Shops.Megas;
 import static com.myocr.entity.Shops.Prisma;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -43,46 +45,59 @@ public class ShopControllerTest extends AbstractSpringTest {
 
     @Test
     public void findShops() throws Exception {
-        mockMvc.perform(get("/shops/inCity/" + Spb))
+        final City spb = cityRepository.findByName(Spb.name());
+        mockMvc.perform(get("/shops/inCity/" + spb.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$", containsInAnyOrder(Auchan.name(), Karusel.name(), Prisma.name())));
+                .andExpect(jsonPath("$[0].id", greaterThan(0)))
+                .andExpect(jsonPath("$[0].name", is(Auchan.name())))
+                .andExpect(jsonPath("$[1].id", greaterThan(0)))
+                .andExpect(jsonPath("$[1].name", is(Prisma.name())))
+                .andExpect(jsonPath("$[2].id", greaterThan(0)))
+                .andExpect(jsonPath("$[2].name", is(Karusel.name())));
     }
 
     @Test
     public void addNewShop() throws Exception {
-        mockMvc.perform(post("/shops/add/" + Tomsk + "/" + Megas))
+        final City tomsk = cityRepository.findByName(Tomsk.name());
+        mockMvc.perform(put("/shops/add/" + tomsk.getId()).content(Megas.name()))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", is(true)));
 
         assertNotNull(cityShopRepository.findByCityNameAndShopName(Tomsk.name(), Megas.name()));
-
-        final Collection<Shop> shopsInTomsk = shopRepository.findByCityShopsCityName(Tomsk.name());
-        assertEquals(shopsInTomsk.size(), 1);
     }
 
     @Test
     public void addExistedShop() throws Exception {
-        mockMvc.perform(post("/shops/add/" + Spb + "/" + Auchan))
+        final City spb = cityRepository.findByName(Spb.name());
+        mockMvc.perform(put("/shops/add/" + spb.getId()).content(Auchan.name()))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", is(false)));
 
-        final Collection<Shop> afterShopsInSpb = shopRepository.findByCityShopsCityName(Spb.name());
+        assertNotNull(cityShopRepository.findByCityNameAndShopName(Spb.name(), Auchan.name()));
+        final Collection<Shop> afterShopsInSpb = shopRepository.findByCityShopsCityId(spb.getId());
         assertEquals(afterShopsInSpb.size(), 3);
     }
 
     @Test
     public void addEndSpacedShop() throws Exception {
-        mockMvc.perform(post("/shops/add/" + Tomsk + "/" + Karusel + " "))
+        final City tomsk = cityRepository.findByName(Tomsk.name());
+        mockMvc.perform(put("/shops/add/" + tomsk.getId()).content(Karusel.name() + " "))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", is(true)));
 
         assertNotNull(cityShopRepository.findByCityNameAndShopName(Tomsk.name(), Karusel.name()));
         assertNull(cityShopRepository.findByCityNameAndShopName(Tomsk.name(), Karusel.name() + " "));
 
-        final Collection<Shop> afterShops = shopRepository.findByCityShopsCityName(Tomsk.name());
+        final Collection<Shop> afterShops = shopRepository.findByCityShopsCityId(tomsk.getId());
         assertEquals(afterShops.size(), 1);
     }
 }
